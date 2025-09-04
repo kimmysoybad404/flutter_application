@@ -9,8 +9,7 @@ class Basic extends StatelessWidget {
       appBar: AppBar(title: Text('My app')),
       body: Text('Hello world'),
       floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        child: Text('Click'),
+        onPressed: null, child: Text('Click'),
       ),
     );
   }
