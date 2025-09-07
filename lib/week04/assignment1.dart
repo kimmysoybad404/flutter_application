@@ -8,13 +8,15 @@ class Assignment1 extends StatefulWidget {
 }
 
 class _Assignment1State extends State<Assignment1> {
-  String message = '';
-  TextEditingController Username = TextEditingController();
-  TextEditingController Password = TextEditingController();
+  TextEditingController tcUsername = TextEditingController();
+  TextEditingController tcPassword = TextEditingController();
 
-  void updateMessage() {
+  void checkLogin() {
     setState(() {
-      message = tcName.text;
+      if(tcUsername == "admin"){
+
+      }
+
     });
   }
 
@@ -40,7 +42,7 @@ class _Assignment1State extends State<Assignment1> {
           Padding(
             padding: const EdgeInsets.fromLTRB(5.0, 16.0, 5.0, 0),
             child: TextField(
-              controller: Username,
+              controller: tcUsername,
               decoration: InputDecoration(
                 hintText: 'Username',
                 hintStyle: TextStyle(
@@ -53,7 +55,7 @@ class _Assignment1State extends State<Assignment1> {
           Padding(
             padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 20.0),
             child: TextField(
-              controller: Password,
+              controller: tcPassword,
               decoration: InputDecoration(
                 hintText: 'Password',
                 hintStyle: TextStyle(
@@ -64,7 +66,7 @@ class _Assignment1State extends State<Assignment1> {
             ),
           ),
           ElevatedButton(
-            onPressed: updateMessage,
+            onPressed: checkLogin,
             style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
             child: Text('Login', style: TextStyle(color: Colors.white)),
           ),
