@@ -8,6 +8,15 @@ class Assignment1 extends StatefulWidget {
 }
 
 class _Assignment1State extends State<Assignment1> {
+  String message = '';
+  TextEditingController tcName = TextEditingController();
+
+  void updateMessage() {
+    setState(() {
+      message = tcName.text;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +33,41 @@ class _Assignment1State extends State<Assignment1> {
           ),
         ),
         backgroundColor: Colors.blue,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(5.0, 16.0, 5.0, 0),
+            child: TextField(
+              controller: tcName,
+              decoration: InputDecoration(
+                hintText: 'Username',
+                hintStyle: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 20.0),
+            child: TextField(
+              controller: tcName,
+              decoration: InputDecoration(
+                hintText: 'Password',
+                hintStyle: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: updateMessage,
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            child: Text('Login', style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
     );
   }
