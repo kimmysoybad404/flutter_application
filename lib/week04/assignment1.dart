@@ -9,7 +9,8 @@ class Assignment1 extends StatefulWidget {
 
 class _Assignment1State extends State<Assignment1> {
   String message = '';
-  TextEditingController tcName = TextEditingController();
+  TextEditingController Username = TextEditingController();
+  TextEditingController Password = TextEditingController();
 
   void updateMessage() {
     setState(() {
@@ -39,7 +40,7 @@ class _Assignment1State extends State<Assignment1> {
           Padding(
             padding: const EdgeInsets.fromLTRB(5.0, 16.0, 5.0, 0),
             child: TextField(
-              controller: tcName,
+              controller: Username,
               decoration: InputDecoration(
                 hintText: 'Username',
                 hintStyle: TextStyle(
@@ -52,7 +53,7 @@ class _Assignment1State extends State<Assignment1> {
           Padding(
             padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 20.0),
             child: TextField(
-              controller: tcName,
+              controller: Password,
               decoration: InputDecoration(
                 hintText: 'Password',
                 hintStyle: TextStyle(
