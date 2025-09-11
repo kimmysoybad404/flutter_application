@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/week05/Weddings.dart';
+import 'package:flutter_application/week05/Calculates.dart';
+
 
 
 
@@ -7,7 +8,7 @@ import 'package:flutter_application/week05/Weddings.dart';
 
 void main() {
   runApp(MaterialApp(home: 
-      Wedding(), debugShowCheckedModeBanner: false,
+      Calculates(), debugShowCheckedModeBanner: false,
     ),
   );
 }
