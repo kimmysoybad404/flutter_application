@@ -34,10 +34,10 @@ class Design2Demo extends StatelessWidget {
               'John Doe',
               style: TextStyle(color: Colors.yellow, fontSize: 22),
             ),
-            SizedBox(width: 16,),
+            SizedBox(height: 16,),
             Text('Age', style: TextStyle(color: Colors.grey[400])),
             Text('22', style: TextStyle(color: Colors.yellow, fontSize: 22)),
-            SizedBox(width: 16,),
+            SizedBox(height: 16,),
             Row(
               children: [
                 Icon(Icons.email, color: Colors.grey),
