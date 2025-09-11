@@ -5,6 +5,10 @@ class Week5 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: Container(
+        child: Text('Singlechild'),
+      ),
+    );
   }
 }
