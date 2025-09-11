@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/week05/batman.dart';
+import 'package:flutter_application/week05/Weddings.dart';
+
 
 
 
 
 void main() {
   runApp(MaterialApp(home: 
-      Design2Demo(), debugShowCheckedModeBanner: false,
+      Wedding(), debugShowCheckedModeBanner: false,
     ),
   );
 }
