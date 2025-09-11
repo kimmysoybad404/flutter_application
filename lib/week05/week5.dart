@@ -8,7 +8,7 @@ class Week5 extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Align(
-          alignment: Alignment(0, -1),
+          alignment: Alignment(0.75, -1),
           child: Text('Single child'),
         )
       ),
