@@ -7,15 +7,10 @@ class Week5 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.all(16),
-          padding: EdgeInsets.all(16),
-          child: Text('Singlechild'),
-          color: Colors.amber,
-          width: 100,
-          height: 50,
-          alignment: Alignment.center,
-        ),
+        child: Align(
+          alignment: Alignment(0, -1),
+          child: Text('Single child'),
+        )
       ),
     );
   }
