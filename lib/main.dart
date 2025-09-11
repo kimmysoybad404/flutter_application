@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/week05/desing1_demo.dart';
+import 'package:flutter_application/week05/batman.dart';
+
 
 
 
 void main() {
   runApp(MaterialApp(home: 
-      Desing1Demo(), debugShowCheckedModeBanner: false,
+      Design2Demo(), debugShowCheckedModeBanner: false,
     ),
   );
 }
