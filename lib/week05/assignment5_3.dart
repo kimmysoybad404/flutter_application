@@ -37,7 +37,7 @@ class _Assignment53State extends State<Assignment53> {
     }
 
     if (change != 0) {
-      if (ranNum > number! && change != 0) {
+      if (ranNum > number && change != 0) {
         setState(() {
           
           result = "$number is too small, $change(s) left!";
