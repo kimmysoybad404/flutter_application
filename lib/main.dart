@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/week05/random_demo.dart';
-
+import 'package:flutter_application/week05/assignment5_1.dart';
 
 void main() {
   runApp(MaterialApp(home: 
-      RandomDemo(), debugShowCheckedModeBanner: false,
+      Assignment51(), debugShowCheckedModeBanner: false,
 
     ),
   );
