@@ -10,6 +10,9 @@ class Assignment51 extends StatefulWidget {
 class _Assignment51State extends State<Assignment51> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      backgroundColor: Colors.pink
+      
+    );
   }
 }
