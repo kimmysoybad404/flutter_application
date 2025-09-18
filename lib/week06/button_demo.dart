@@ -9,15 +9,9 @@ class ButtonDemo extends StatelessWidget {
       body:SafeArea(child: Column(
         children: [
           OverflowBar(
-             alignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          icon: const Icon(Icons.volume_up),
-          onPressed: () {},
-          color: Colors.red,
-        ),
-
-            ],
+            alignment: MainAxisAlignment.center,
+            children: [Icon(Icon.volum_up, color: Colors.red),
+            onPress],
           )
         ],
       )) 
