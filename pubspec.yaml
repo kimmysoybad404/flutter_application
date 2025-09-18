@@ -75,9 +75,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-  - family: LibertinusKeyboard
+  - family: Sevillana
     fonts:
-      - asset: fonts/LibertinusKeyboard-Regular.ttf
+      - asset: fonts/Sevillana-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
