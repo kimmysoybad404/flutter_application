@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/week06/image_demo.dart';
+import 'package:flutter_application/week06/baking_app.dart';
+
 
 
 
@@ -7,7 +8,7 @@ import 'package:flutter_application/week06/image_demo.dart';
 
 void main() {
   runApp(MaterialApp(home: 
-        ImageDemo(), debugShowCheckedModeBanner: false,
+        BakingApp(), debugShowCheckedModeBanner: false,
     ),
   );
 }
