@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/week05/Calculates.dart';
-
-
+import 'package:flutter_application/week06/image.dart';
 
 
 
 
 void main() {
   runApp(MaterialApp(home: 
-      Calculates(), debugShowCheckedModeBanner: false,
+      ImageDemo(), debugShowCheckedModeBanner: false,
     ),
   );
 }
