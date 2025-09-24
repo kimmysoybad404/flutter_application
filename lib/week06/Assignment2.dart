@@ -41,6 +41,7 @@ class _ClickGameState extends State<ClickGames> {
     });
   }
 
+
   void addClick() {
     if (isRunning) {
       setState(() {
