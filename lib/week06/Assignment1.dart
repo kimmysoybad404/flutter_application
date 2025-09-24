@@ -65,14 +65,14 @@ class SignInScreen extends StatelessWidget {
 
                         _UnderlineField(
                           label: 'Email Address',
-                          icon: Icons.email_outlined,
+                          icon: Icons.alternate_email,
                         ),
                         const SizedBox(height: 20),
 
                         
                         _UnderlineField(
                           label: 'Password',
-                          icon: Icons.lock_outline,
+                          icon: Icons.lock_open,
                           obscure: true,
                         ),
                         const Spacer(),
