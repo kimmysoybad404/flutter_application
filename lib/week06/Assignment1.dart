@@ -81,7 +81,7 @@ class SignInScreen extends StatelessWidget {
                         Row(
                           children: [
                             _CircleOutlinedIcon(
-                              icon: Icons.android,
+                              icon: Icons.adb,
                               onTap: () {},
                             ),
                             const SizedBox(width: 16),
