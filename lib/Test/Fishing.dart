@@ -30,7 +30,7 @@ class _FishingState extends State<Fishing> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         worms,(index) =>
-            const Icon(Icons.waves_rounded, color: Colors.redAccent, size: 35),
+            const Icon(Icons.waves_rounded, color: Color.fromARGB(255, 255, 158, 158), size: 35),
       ),
     );
   }
@@ -89,54 +89,56 @@ class _FishingState extends State<Fishing> {
         title: Text("Fishing Game", style: TextStyle(color: Colors.white)),
       ),
 
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Worms:", style: TextStyle(fontSize: 18)),
-              buildWormIcons(),
-            ],
-          ),
-
-          const SizedBox(height: 20),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.currency_exchange, color: Colors.amber, size: 30),
-              Text("$YourCoins", style: TextStyle(fontSize: 20)),
-            ],
-          ),
-
-          const SizedBox(height: 10),
-
-          Padding(
-            padding: const EdgeInsets.only(left: 100, right: 100),
-            child: Image.asset(checkfirst()),
-          ),
-
-          const SizedBox(height: 50),
-
-          Text(checktextfirst(), style: TextStyle(fontSize: 20)),
-
-          const SizedBox(height: 20),
-
-          ElevatedButton(
-            onPressed: checknoworn(),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: Text("Fishing", style: TextStyle(color: Colors.white)),
-          ),
-
-          const SizedBox(height: 5),
-
-          ElevatedButton(
-            onPressed: reset,
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: Text("Reset", style: TextStyle(color: Colors.white)),
-          ),
-        ],
+      body: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Worms:", style: TextStyle(fontSize: 18)),
+                buildWormIcons(),
+              ],
+            ),
+        
+            const SizedBox(height: 20),
+        
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.currency_exchange, color: Colors.amber, size: 30),
+                Text("$YourCoins", style: TextStyle(fontSize: 20)),
+              ],
+            ),
+        
+            const SizedBox(height: 10),
+        
+            Padding(
+              padding: const EdgeInsets.only(left: 100, right: 100),
+              child: Image.asset(checkfirst()),
+            ),
+        
+            const SizedBox(height: 50),
+        
+            Text(checktextfirst(), style: TextStyle(fontSize: 20)),
+        
+            const SizedBox(height: 20),
+        
+            ElevatedButton(
+              onPressed: checknoworn(),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Text("Fishing", style: TextStyle(color: Colors.white)),
+            ),
+        
+            const SizedBox(height: 5),
+        
+            ElevatedButton(
+              onPressed: reset,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: Text("Reset", style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
       ),
     );
   }
