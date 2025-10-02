@@ -70,7 +70,7 @@ void loop() {
 
   if (!isnan(temp)) {
     // วันที่แบบ YYYY-MM-DD
-    String temoTxt = String(temp) + " °C"
+    String Temptxt = String(temp) + " °C"
     time_t rawTime = timeClient.getEpochTime();
     struct tm *ti = localtime(&rawTime);
     char dateStr[20];
@@ -79,7 +79,7 @@ void loop() {
     // เวลาแบบ HH:MM:SS
     String timeStr = timeClient.getFormattedTime();
 
-    Serial.printf("🌡 Temp: %.2f °C | 📅 %s 🕒 %s\n", temp, dateStr, timeStr.c_str());
+    Serial.printf("🌡 Temp: %.2f °C | 📅 %s 🕒 %s\n", Temptxt, dateStr, timeStr.c_str());
 
     if (Firebase.ready()) {
       Serial.println("🔥 Firebase is ready, sending...");
@@ -87,7 +87,7 @@ void loop() {
       // Path: /weather/วันที่/เวลา
       String path = "/weather/" + String(dateStr) + "/" + timeStr;
 
-      if (Firebase.RTDB.setFloat(&fbdo, path.c_str(), temp)) {
+      if (Firebase.RTDB.setFloat(&fbdo, path.c_str(), Temptxt)) {
         Serial.println("✅ Saved to Firebase");
       } else {
         Serial.printf("❌ Firebase error: %s\n", fbdo.errorReason().c_str());
