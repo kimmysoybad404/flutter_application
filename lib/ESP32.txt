@@ -10,7 +10,7 @@
 
 // -------------------- Firebase --------------------
 #define API_KEY "AIzaSyBOOj-0XLlpUFdqdWFB6Fy2zQ75U54vRaU"
-#define DATABASE_URL "smarthomea-43c25-default-rtdb.asia-southeast1.firebasedatabase.app"
+#define DATABASE_URL "https://smarthomea-43c25-default-rtdb.asia-southeast1.firebasedatabase.app/"
 
 FirebaseData fbdo;
 FirebaseAuth auth;
@@ -24,7 +24,6 @@ DHT dht(DHTPIN, DHTTYPE);
 // -------------------- NTP (เวลา) --------------------
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", 7 * 3600); // GMT+7
-
 
 void setup() {
   Serial.begin(115200);
@@ -51,15 +50,16 @@ void setup() {
   }
 
   // ตั้งค่า timeout กัน SSL ปิดเอง
-  config.timeout.serverResponse = 10 * 1000;      // 10s
+  config.timeout.serverResponse = 10 * 1000;      
   config.timeout.socketConnection = 10 * 1000;
   config.timeout.sslHandshake = 10 * 1000;
-  config.timeout.rtdbKeepAlive = 45 * 1000;       // keepAlive
+  config.timeout.rtdbKeepAlive = 45 * 1000;       
 
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
 
   dht.begin();
+  timeClient.begin();
   Serial.println("✅ DHT22 sensor ready");
 }
 
@@ -69,8 +69,10 @@ void loop() {
   float temp = dht.readTemperature();
 
   if (!isnan(temp)) {
+    // อุณหภูมิเป็นข้อความ เช่น "30 องศา"
+    String Temptxt = String(temp, 0) + " องศา";
+
     // วันที่แบบ YYYY-MM-DD
-    String Temptxt = String(temp) + " °C"
     time_t rawTime = timeClient.getEpochTime();
     struct tm *ti = localtime(&rawTime);
     char dateStr[20];
@@ -79,7 +81,7 @@ void loop() {
     // เวลาแบบ HH:MM:SS
     String timeStr = timeClient.getFormattedTime();
 
-    Serial.printf("🌡 Temp: %.2f °C | 📅 %s 🕒 %s\n", Temptxt, dateStr, timeStr.c_str());
+    Serial.printf("🌡 Temp: %s | 📅 %s 🕒 %s\n", Temptxt.c_str(), dateStr, timeStr.c_str());
 
     if (Firebase.ready()) {
       Serial.println("🔥 Firebase is ready, sending...");
@@ -87,7 +89,7 @@ void loop() {
       // Path: /weather/วันที่/เวลา
       String path = "/weather/" + String(dateStr) + "/" + timeStr;
 
-      if (Firebase.RTDB.setFloat(&fbdo, path.c_str(), Temptxt)) {
+      if (Firebase.RTDB.setString(&fbdo, path.c_str(), Temptxt)) {
         Serial.println("✅ Saved to Firebase");
       } else {
         Serial.printf("❌ Firebase error: %s\n", fbdo.errorReason().c_str());
