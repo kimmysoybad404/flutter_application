@@ -28,15 +28,25 @@ void setup() {
   }
   Serial.println("\n✅ WiFi connected");
 
-  // Firebase setup
+  // -------------------- สำคัญ: sync เวลา NTP --------------------
+  configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+  Serial.print("⏳ Syncing time");
+  time_t now = time(nullptr);
+  while (now < 8 * 3600 * 2) {   // ถ้ายังไม่ได้เวลา (น้อยกว่า 1970)
+    delay(500);
+    Serial.print(".");
+    now = time(nullptr);
+  }
+  Serial.println("\n✅ Time synced!");
+
+  // -------------------- Firebase --------------------
   config.api_key = API_KEY;
   config.database_url = DATABASE_URL;
-  config.signer.test_mode = true;   // ใช้ test mode (public rules)
+  config.signer.test_mode = true;   // ใช้ public rules
 
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
 
-  Serial.printf("Firebase Client v%s\n", FIREBASE_CLIENT_VERSION);
   dht.begin();
 }
 
@@ -56,10 +66,7 @@ void loop() {
         Serial.print("❌ Firebase error: ");
         Serial.println(fbdo.errorReason());
       }
-    } else {
-      Serial.printf("⚠️ Firebase not ready, WiFi status: %d\n", WiFi.status());
     }
   }
-
   delay(5000);
 }
