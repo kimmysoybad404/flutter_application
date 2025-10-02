@@ -2,7 +2,7 @@ name: flutter_application
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -31,7 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  stylish_bottom_bar: ^1.0.6 
+  firebase_core: ^3.6.0
+  firebase_database: ^11.3.10
+  stylish_bottom_bar: ^1.0.6
   curved_navigation_bar: ^1.0.3
 
   # The following adds the Cupertino Icons font to your application.
@@ -55,7 +57,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -69,7 +70,6 @@ flutter:
     - aessets/images/lll.png
     - aessets/images/ooo.png
     - aessets/images/sss.png
-    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -83,9 +83,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-  - family: LibertinusKeyboard
-    fonts:
-      - asset: fonts/LibertinusKeyboard-Regular.ttf
+    - family: LibertinusKeyboard
+      fonts:
+        - asset: fonts/LibertinusKeyboard-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
