@@ -1,6 +1,7 @@
 #include <WiFi.h>
 #include <Firebase_ESP_Client.h>
 #include <DHT.h>
+#include <addons/TokenHelper.h>   // <-- สำคัญ! ให้ callback แสดงสถานะ token
 
 // -------------------- WiFi --------------------
 #define WIFI_SSID "Kimmy"
@@ -8,7 +9,7 @@
 
 // -------------------- Firebase --------------------
 #define API_KEY "AIzaSyBOOj-0XLlpUFdqdWFB6Fy2zQ75U54vRaU"
-#define DATABASE_URL "https://smarthomea-43c25-default-rtdb.asia-southeast1.firebasedatabase.app"
+#define DATABASE_URL "smarthomea-43c25-default-rtdb.asia-southeast1.firebasedatabase.app"
 
 FirebaseData fbdo;
 FirebaseAuth auth;
@@ -31,11 +32,12 @@ void setup() {
   }
   Serial.println("\n✅ WiFi connected");
 
-  // Firebase
+  // Firebase config
   config.api_key = API_KEY;
   config.database_url = DATABASE_URL;
+  config.token_status_callback = tokenStatusCallback; // ให้เห็น log token
 
-  // anonymous login
+  // Anonymous login
   if (Firebase.signUp(&config, &auth, "", "")) {
     Serial.println("✅ Firebase SignUp ok");
   } else {
