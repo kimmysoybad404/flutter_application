@@ -2,16 +2,19 @@
 #include <Firebase_ESP_Client.h>
 #include <DHT.h>
 
+// -------------------- WiFi --------------------
 #define WIFI_SSID "Kimmy"
 #define WIFI_PASSWORD "kimmy1234"
 
+// -------------------- Firebase --------------------
 #define API_KEY "AIzaSyBOOj-0XLlpUFdqdWFB6Fy2zQ75U54vRaU"
-#define DATABASE_URL "smarthomea-43c25-default-rtdb.asia-southeast1.firebasedatabase.app"
+#define DATABASE_URL "https://smarthomea-43c25-default-rtdb.asia-southeast1.firebasedatabase.app/"
 
 FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
 
+// -------------------- DHT22 Sensor --------------------
 #define DHTPIN 4
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
@@ -19,40 +22,66 @@ DHT dht(DHTPIN, DHTTYPE);
 void setup() {
   Serial.begin(115200);
 
+  // -------------------- WiFi --------------------
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("✅ WiFi connected");
+  Serial.println("\n✅ WiFi connected");
 
+  // -------------------- Firebase --------------------
   config.api_key = API_KEY;
   config.database_url = DATABASE_URL;
 
+  // anonymous login
   if (Firebase.signUp(&config, &auth, "", "")) {
-    Serial.println("✅ Firebase SignUp success");
+    Serial.println("✅ Firebase SignUp OK");
   } else {
-    Serial.printf("❌ SignUp failed: %s\n", config.signer.signupError.message.c_str());
+    Serial.printf("❌ Firebase SignUp failed: %s\n",
+                  config.signer.signupError.message.c_str());
   }
+
+  // ตั้งค่า timeout กัน SSL ปิดเอง
+  config.timeout.serverResponse = 10 * 1000;      // 10s
+  config.timeout.socketConnection = 10 * 1000;
+  config.timeout.sslHandshake = 10 * 1000;
+  config.timeout.rtdbKeepAlive = 45 * 1000;       // keepAlive
 
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
 
   dht.begin();
+  Serial.println("✅ DHT22 sensor ready");
 }
 
 void loop() {
   float temp = dht.readTemperature();
+
   if (!isnan(temp)) {
     Serial.printf("🌡 Temperature: %.2f °C\n", temp);
 
     if (Firebase.ready()) {
+      Serial.println("🔥 Firebase is ready, sending...");
       if (Firebase.RTDB.setFloat(&fbdo, "/weather/temperature", temp)) {
         Serial.println("✅ Sent to Firebase");
       } else {
-        Serial.printf("❌ Error: %s\n", fbdo.errorReason().c_str());
+        Serial.printf("❌ Firebase error: %s\n",
+                      fbdo.errorReason().c_str());
       }
+    } else {
+      Serial.println("⚠ Firebase not ready");
     }
+  } else {
+    Serial.println("❌ Failed to read DHT22");
   }
-  delay(5000);
+
+  // ถ้า WiFi หลุด → reconnect
+  if (WiFi.status() != WL_CONNECTED) {
+    WiFi.reconnect();
+    Serial.println("🔄 WiFi reconnecting...");
+  }
+
+  delay(10000); // ส่งทุก 10 วิ
 }
