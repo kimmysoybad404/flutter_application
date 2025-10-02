@@ -70,6 +70,7 @@ void loop() {
 
   if (!isnan(temp)) {
     // วันที่แบบ YYYY-MM-DD
+    String temoTxt = String(temp) + " °C"
     time_t rawTime = timeClient.getEpochTime();
     struct tm *ti = localtime(&rawTime);
     char dateStr[20];
