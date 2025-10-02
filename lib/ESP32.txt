@@ -10,7 +10,7 @@
 
 // -------------------- Firebase --------------------
 #define API_KEY "AIzaSyBOOj-0XLlpUFdqdWFB6Fy2zQ75U54vRaU"
-#define DATABASE_URL "https://smarthomea-43c25-default-rtdb.asia-southeast1.firebasedatabase.app/"
+#define DATABASE_URL "smarthomea-43c25-default-rtdb.asia-southeast1.firebasedatabase.app"
 
 FirebaseData fbdo;
 FirebaseAuth auth;

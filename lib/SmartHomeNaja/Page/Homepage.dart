@@ -57,7 +57,7 @@ class _HomepageState extends State<Homepage> {
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                         Text(
-                          "Climate",
+                          "Time",
                           style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
                       ],
