@@ -22,8 +22,11 @@ class _SettingpageState extends State<Settingpage> {
       backgroundColor: const Color.fromARGB(137, 224, 224, 224),
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(136, 240, 240, 240),
-        title: const Text("Setting"),
+        backgroundColor: Colors.blueAccent,
+        title: const Text(
+          "Setting",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),

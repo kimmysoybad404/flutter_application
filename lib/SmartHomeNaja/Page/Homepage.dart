@@ -64,11 +64,58 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
+  void loadDeviceStates() {
+  dbRef.child("devices").onValue.listen((event) {
+    if (event.snapshot.value != null) {
+      final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+
+      setState(() {
+        devices = [
+          {
+            "name": "LED",
+            "room": "Bedroom",
+            "icon": Icons.lightbulb,
+            "isOn": data["led"] ?? false,
+          },
+          {
+            "name": "Fan",
+            "room": "Living Room",
+            "icon": Icons.air,
+            "isOn": data["fan"] ?? false,
+          },
+          {
+            "name": "Air Conditioner",
+            "room": "Office",
+            "icon": Icons.ac_unit,
+            "isOn": data["ac"] ?? false,
+          },
+        ];
+      });
+    }
+  });
+}
+
+  void toggleDevice(String deviceName, bool value) {
+  setState(() {
+    final device = devices.firstWhere((d) => d["name"] == deviceName);
+    device["isOn"] = value;
+  });
+
+  if (deviceName == "LED") {
+    dbRef.child("devices/led").set(value);
+  } else if (deviceName == "Fan") {
+    dbRef.child("devices/fan").set(value);
+  } else if (deviceName == "Air Conditioner") {
+    dbRef.child("devices/ac").set(value);
+  }
+}
+
   @override
   void initState() {
     super.initState();
     startClock();
     getLatestWeather();
+    loadDeviceStates();
   }
 
   @override
@@ -95,10 +142,10 @@ class _HomepageState extends State<Homepage> {
       backgroundColor: const Color.fromARGB(137, 224, 224, 224),
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(136, 240, 240, 240),
+        backgroundColor: Colors.blueAccent,
         title: const Text(
           "Home",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Column(
@@ -225,9 +272,7 @@ class _HomepageState extends State<Homepage> {
                             child: Switch(
                               value: device["isOn"],
                               onChanged: (val) {
-                                setState(() {
-                                  device["isOn"] = val;
-                                });
+                                toggleDevice(device["name"], val);
                               },
                             ),
                           ),

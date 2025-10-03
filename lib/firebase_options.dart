@@ -90,4 +90,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'smarthomea-43c25.firebasestorage.app',
     measurementId: 'G-XJMRHKGQF0',
   );
+
 }

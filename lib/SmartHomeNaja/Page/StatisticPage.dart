@@ -39,8 +39,11 @@ class _StatisticpageState extends State<Statisticpage> {
       backgroundColor: const Color.fromARGB(137, 224, 224, 224),
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(136, 240, 240, 240),
-        title: const Text("Statistic"),
+        backgroundColor: Colors.blueAccent,
+        title: const Text(
+          "Statistic",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),

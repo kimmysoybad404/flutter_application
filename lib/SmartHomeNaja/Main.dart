@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_application/SmartHomeNaja/Page/Homepage.dart';
-import 'package:flutter_application/SmartHomeNaja/Page/RoomPage.dart';
+import 'package:flutter_application/SmartHomeNaja/Page/VoiceCommandPage.dart';
 import 'package:flutter_application/SmartHomeNaja/Page/SettingPage.dart';
 import 'package:flutter_application/SmartHomeNaja/Page/StatisticPage.dart';
 
@@ -18,7 +18,7 @@ class _MainState extends State<Main> {
   final List<Widget> _pages = [
     Homepage(),
     Statisticpage(),
-    Roompage(),
+    VoiceCommandPage(),
     Settingpage(),
   ];
 
