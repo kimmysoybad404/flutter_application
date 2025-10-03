@@ -2,6 +2,7 @@
 
     <!-- ขอสิทธิ์ใช้ไมโครโฟน -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:label="flutter_application"

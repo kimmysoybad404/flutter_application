@@ -3,10 +3,12 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:flutter_tts/flutter_tts.dart';
 
 class VoiceHelper {
   final dbRef = FirebaseDatabase.instance.ref();
   final stt.SpeechToText _speech = stt.SpeechToText();
+  final FlutterTts _tts = FlutterTts();
 
   /// ใส่ API Key ของ Gemini
   final String geminiApiKey = "YOUR_API_KEY_HERE";
@@ -70,6 +72,29 @@ class VoiceHelper {
     }
   }
 
+  Future<String> getLatestTemperature() async {
+    try {
+      final snapshot = await dbRef.child("weather").limitToLast(1).get();
+
+      if (snapshot.exists) {
+        // snapshot.value = { "2025-10-02": {...} }
+        final data = snapshot.value as Map;
+        final lastDateKey = data.keys.last; // วันที่ล่าสุด
+        final lastDateMap = data[lastDateKey] as Map;
+
+        final lastTimeKey = lastDateMap.keys.last; // เวลาล่าสุด
+        final latestTemp = lastDateMap[lastTimeKey];
+
+        return latestTemp.toString();
+      } else {
+        return "ไม่พบข้อมูลอุณหภูมิ";
+      }
+    } catch (e) {
+      print("❌ Temp error: $e");
+      return "Error";
+    }
+  }
+
   /// fallback ถ้า Gemini ตอบ unknown
   String fallbackDetect(String text, String lang) {
     if (lang == "unknown") {
@@ -127,6 +152,14 @@ class VoiceHelper {
               dbRef.child("devices/ac").set(true);
             } else if (text.contains("ปิดแอร์")) {
               dbRef.child("devices/ac").set(false);
+            } else if (text.contains("อุณหภูมิ")) {
+              final temp = await getLatestTemperature();
+              onResult("$temp °C", true);
+              final msg = "$temp °C";
+              dbRef.child("voice/response").set(msg);
+
+              await _tts.setLanguage("th-TH");
+              await _tts.speak("ตอนนี้อุณหภูมิ $temp องศาเซลเซียส");
             }
           } else if (lang == "en") {
             if (text.toLowerCase().contains("turn on light")) {
@@ -141,6 +174,16 @@ class VoiceHelper {
               dbRef.child("devices/ac").set(true);
             } else if (text.toLowerCase().contains("turn off air")) {
               dbRef.child("devices/ac").set(false);
+            } else if (text.toLowerCase().contains("temperature")) {
+              final temp = await getLatestTemperature();
+              onResult("$temp °C", true);
+              final msg = "$temp °C";
+              dbRef.child("voice/response").set(msg);
+
+              await _tts.setLanguage("en-US");
+              await _tts.speak(
+                "The current temperature is $temp degrees Celsius",
+              );
             }
           }
 
