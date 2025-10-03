@@ -11,7 +11,7 @@ class VoiceCommandPage extends StatefulWidget {
 class _VoiceCommandPageState extends State<VoiceCommandPage> {
   final VoiceHelper _voice = VoiceHelper();
   bool _isListening = false;
-  String _recognizedText = "กดปุ่มแล้วพูด...";
+  String _recognizedText = "Tap to say...";
 
   void _startListening() {
     setState(() => _isListening = true);
@@ -102,7 +102,7 @@ class _VoiceCommandPageState extends State<VoiceCommandPage> {
             ),
             const SizedBox(height: 20),
             Text(
-              _isListening ? "กำลังฟังอยู่..." : "แตะปุ่มเพื่อเริ่มพูด",
+              _isListening ? "Listening..." : "Tap to say",
               style: const TextStyle(fontSize: 16, color: Colors.black54),
             )
           ],
