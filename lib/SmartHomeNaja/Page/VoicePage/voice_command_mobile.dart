@@ -11,7 +11,7 @@ class VoiceHelper {
   final FlutterTts _tts = FlutterTts();
 
   /// ใส่ API Key ของ Gemini
-  final String geminiApiKey = "YOUR_API_KEY_HERE";
+  final String geminiApiKey = "AIzaSyDCf85x4g1R_ISKaRtFWw0rs9mtukd9JtY";
 
   Future<bool> initPermission() async {
     var status = await Permission.microphone.request();

@@ -45,24 +45,26 @@ class _HomepageState extends State<Homepage> {
   }
 
   void getLatestWeather() {
-    final todayPath = getTodayPath();
-    final weatherRef = dbRef.child("weather/$todayPath");
+  final todayPath = getTodayPath();
+  final tempRef = dbRef.child("weather/$todayPath");
 
-    weatherRef.limitToLast(1).onValue.listen((event) {
-      if (event.snapshot.value != null) {
-        final raw = event.snapshot.value as Map<Object?, Object?>;
-        final data = raw.map(
-          (key, value) => MapEntry(key.toString(), value.toString()),
-        );
+  tempRef.orderByKey().limitToLast(1).onValue.listen((event) {
+    if (event.snapshot.value != null) {
+      final raw = Map<String, dynamic>.from(event.snapshot.value as Map);
 
-        String lastValue = data.values.last.toString();
+      String lastTemp = "--";
+      raw.forEach((key, value) {
+        if (value is Map && value["temperature"] != null) {
+          lastTemp = value["temperature"].toString().split(" ").first;
+        }
+      });
 
-        setState(() {
-          temperature = lastValue;
-        });
-      }
-    });
-  }
+      setState(() {
+        temperature = "$lastTemp °C"; 
+      });
+    }
+  });
+}
 
   void loadDeviceStates() {
   dbRef.child("devices").onValue.listen((event) {
