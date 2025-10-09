@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/week04/assignment1.dart';
+import 'package:flutter_application/W7/Page/Page1.dart';
 
 
 void main() {
   runApp(MaterialApp(home: 
-      Assignment1(), debugShowCheckedModeBanner: false,
+      Page1W7(), debugShowCheckedModeBanner: false,
     ),
   );
 }

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "452721491201",
+    "firebase_url": "https://smarthomea-43c25-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "smarthomea-43c25",
+    "storage_bucket": "smarthomea-43c25.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452721491201:android:8ace4ef4c550c40d7def00",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmWfXnlIKzrgWwREJ9IKo66APOPyMZaeA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
