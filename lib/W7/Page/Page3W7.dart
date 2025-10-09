@@ -54,10 +54,6 @@ class _Page3W7State extends State<Page3W7> {
   }
 
   void showAlert() async {
-    setState(() {
-      ThankText = "Thank you for your order!";
-    });
-
     int totalPrice = Baht;
     if (sw == true) {
       totalPrice += 5;
@@ -93,6 +89,9 @@ class _Page3W7State extends State<Page3W7> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                setState(() {
+                  ThankText = "Thank you for your order!";
+                });
               },
               child: const Text('Ok'),
             ),
@@ -104,19 +103,16 @@ class _Page3W7State extends State<Page3W7> {
 
   @override
   Widget build(BuildContext context) {
-
     List<Widget> radios = List.generate(
       Coffee.length,
       (index) => Row(
         children: [
-
           Radio<int>(
             value: index,
             groupValue: TypeCoffee,
             onChanged: SelectCofffe,
           ),
           Text(Coffee[index]),
-          
         ],
       ),
     );
@@ -157,7 +153,7 @@ class _Page3W7State extends State<Page3W7> {
               padding: const EdgeInsets.all(20.0),
               child: Row(
                 children: [
-                  Text("Type"),
+                  Text("Type", style: TextStyle(fontWeight: FontWeight.bold)),
                   Spacer(),
                   Text("Hot"),
                   Switch(value: sw, onChanged: SelectType),
@@ -167,10 +163,18 @@ class _Page3W7State extends State<Page3W7> {
             ),
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Sugar level"),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    "Sugar",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(width: 50),
+                Text("None"),
                 Slider(
                   min: 0,
                   max: 100,
