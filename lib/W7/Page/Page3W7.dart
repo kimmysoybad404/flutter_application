@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 
-class Page2W7 extends StatefulWidget {
-  const Page2W7({super.key});
+class Page3W7 extends StatefulWidget {
+  const Page3W7({super.key});
 
   @override
-  State<Page2W7> createState() => _Page2W7State();
+  State<Page3W7> createState() => _Page3W7State();
 }
 
-class _Page2W7State extends State<Page2W7> {
+class _Page3W7State extends State<Page3W7> {
   bool sw = false;
   double sliderValue2 = 0;
   String TextSugar = "none";
   String TypeHorC = "Hot";
+  String TextCoffee = "Latte";
+  int Baht = 35;
+  int TypeCoffee = 0;
+  String ThankText = "";
+
+  List ImageCoffee = [
+    "assets/images/Americano.jpeg",
+    "assets/images/Cappuccino.jpg",
+    "assets/images/Latte.jpg",
+  ];
+
+  List Coffee = ["Latte 35", "Americano 30", "Cappuccino 40"];
 
   void SelectType(bool? status) {
     setState(() {
@@ -24,13 +36,59 @@ class _Page2W7State extends State<Page2W7> {
     });
   }
 
+  void SelectCofffe(int? value) {
+    setState(() {
+      TypeCoffee = value!;
+      if (TypeCoffee == 0) {
+        TextCoffee = "Latte";
+        Baht = 35;
+      } else if (TypeCoffee == 1) {
+        TextCoffee = "Americano";
+        Baht = 30;
+      } else if (TypeCoffee == 2) {
+        TextCoffee = "Cappuccino";
+        Baht = 40;
+      }
+    });
+  }
+
   void showAlert() async {
+    setState(() {
+      ThankText = "Thank you for your order!";
+    });
+    if (sw == true) {
+      Baht += 5;
+    }
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Your order'),
-          content: Text('$TypeHorC coffee with $TextSugar sugar'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Ok'),
+            ),
+          ],
+          content: Column(
+            children: [
+              Spacer(),
+              Image.asset(ImageCoffee[TypeCoffee]),
+              Spacer(),
+              Text(
+                '$TypeHorC $TextCoffee coffee with $TextSugar sugar. Price = $Baht',
+              ),
+              Spacer(),
+            ],
+          ),
         );
       },
     );
@@ -38,6 +96,20 @@ class _Page2W7State extends State<Page2W7> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> radios = List.generate(
+      Coffee.length,
+      (index) => Row(
+        children: [
+          Radio<int>(
+            value: index,
+            groupValue: TypeCoffee,
+            onChanged: SelectCofffe,
+          ),
+          Text(Coffee[index]),
+        ],
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -56,6 +128,8 @@ class _Page2W7State extends State<Page2W7> {
               child: Text("Your Order", style: TextStyle(fontSize: 30)),
             ),
 
+            Column(children: radios),
+
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Row(
@@ -64,7 +138,7 @@ class _Page2W7State extends State<Page2W7> {
                   Spacer(),
                   Text("Hot"),
                   Switch(value: sw, onChanged: SelectType),
-                  Text("Cold"),
+                  Text("Cold(+5)"),
                 ],
               ),
             ),
@@ -104,6 +178,13 @@ class _Page2W7State extends State<Page2W7> {
               ),
               onPressed: showAlert,
               child: Text("ORDER", style: TextStyle(color: Colors.white)),
+            ),
+
+            const SizedBox(height: 20),
+
+            Text(
+              ThankText ?? "",
+              style: TextStyle(color: Colors.red, fontSize: 15),
             ),
           ],
         ),
