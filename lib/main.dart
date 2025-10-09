@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/W7/Learn/DatePicker.dart';
 import 'package:flutter_application/W7/Learn/Page1L.dart';
-import 'package:flutter_application/W7/Page/Page1.dart';
+import 'package:flutter_application/W7/Page/Page1W7.dart';
 
 
 void main() {
   runApp(MaterialApp(home: 
-      DatePicker(), debugShowCheckedModeBanner: false,
+      Page1W7(), debugShowCheckedModeBanner: false,
     ),
   );
 }
