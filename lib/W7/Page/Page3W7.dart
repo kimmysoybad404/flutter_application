@@ -104,16 +104,19 @@ class _Page3W7State extends State<Page3W7> {
 
   @override
   Widget build(BuildContext context) {
+
     List<Widget> radios = List.generate(
       Coffee.length,
       (index) => Row(
         children: [
+
           Radio<int>(
             value: index,
             groupValue: TypeCoffee,
             onChanged: SelectCofffe,
           ),
           Text(Coffee[index]),
+          
         ],
       ),
     );
