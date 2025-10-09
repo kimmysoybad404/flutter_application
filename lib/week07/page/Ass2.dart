@@ -23,6 +23,11 @@ class _Ass2State extends State<Ass2> {
     return sugarWords[idx];
   }
 
+  String sugarDisplay(double v) {
+    final label = sugarLabel(v);
+    return label == 'none' ? 'no' : label;
+  }
+
   String get drinkType => sw ? 'Cold' : 'Hot';
 
   void showAlert(BuildContext context) async {
@@ -32,7 +37,7 @@ class _Ass2State extends State<Ass2> {
         return AlertDialog(
           title: Text('Your order'),
           content: Text(
-            '$drinkType coffee with ${sugarLabel(slidervalue)} sugar',
+            '$drinkType coffee with ${sugarDisplay(slidervalue)} sugar',
           ),
         );
       },
