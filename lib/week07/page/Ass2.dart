@@ -1,34 +1,40 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+
 
 class Ass2 extends StatefulWidget {
   const Ass2({super.key});
 
+
   @override
   State<Ass2> createState() => _Ass2State();
 }
+
 
 class _Ass2State extends State<Ass2> {
   bool sw = false;
   double slidervalue = 100;
   final List<String> sugarWords = ['none', 'less', 'normal'];
 
+
   void toggleSwitch(bool value) {
     setState(() => sw = value);
   }
+
 
   String sugarLabel(double v) {
     final idx = (v / 50).round().clamp(0, 2);
     return sugarWords[idx];
   }
 
+
   String sugarDisplay(double v) {
     final label = sugarLabel(v);
     return label == 'none' ? 'no' : label;
   }
 
+
   String get drinkType => sw ? 'Cold' : 'Hot';
+
 
   void showAlert(BuildContext context) async {
     await showDialog(
@@ -44,6 +50,7 @@ class _Ass2State extends State<Ass2> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +58,7 @@ class _Ass2State extends State<Ass2> {
         backgroundColor: Colors.deepPurple,
         title: Text("MFU Coffee Shop", style: TextStyle(color: Colors.white)),
       ),
+
 
       body: Center(
         child: Padding(
@@ -67,6 +75,7 @@ class _Ass2State extends State<Ass2> {
                   Text("Cold", style: TextStyle(fontSize: 20)),
                 ],
               ),
+
 
               Row(
                 children: [
@@ -87,7 +96,9 @@ class _Ass2State extends State<Ass2> {
                 ],
               ),
 
+
               const SizedBox(height: 30),
+
 
               ElevatedButton(
                 onPressed: () => showAlert(context),
