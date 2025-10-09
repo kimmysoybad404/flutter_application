@@ -1,15 +1,127 @@
 import 'package:flutter/material.dart';
 
+
 class Ass3 extends StatefulWidget {
   const Ass3({super.key});
+
 
   @override
   State<Ass3> createState() => _Ass3State();
 }
 
+
 class _Ass3State extends State<Ass3> {
+  bool sw = false;
+  double slidervalue = 100;
+  final List<String> sugarWords = ['none', 'less', 'normal'];
+
+
+  void toggleSwitch(bool value) {
+    setState(() => sw = value);
+  }
+
+
+  String sugarLabel(double v) {
+    final idx = (v / 50).round().clamp(0, 2);
+    return sugarWords[idx];
+  }
+
+
+  String sugarDisplay(double v) {
+    final label = sugarLabel(v);
+    return label == 'none' ? 'no' : label;
+  }
+
+
+  String get drinkType => sw ? 'Cold' : 'Hot';
+
+
+  void showAlert(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Your order'),
+          content: Text(
+            '$drinkType coffee with ${sugarDisplay(slidervalue)} sugar',
+          ),
+        );
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.deepPurple,
+        title: Text("MFU Coffee Shop", style: TextStyle(color: Colors.white)),
+      ),
+
+
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Text("Your order", style: TextStyle(fontSize: 30)),
+              Row(
+                children: [Column(
+                  children: [
+                    Text("Coffee", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  ],
+                )],
+              ),
+
+              Row(
+                children: [
+                  Text("Type", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Spacer(),
+                  Text("Hot", style: TextStyle(fontSize: 20)),
+                  Switch(value: sw, onChanged: toggleSwitch),
+                  Text("Cold(+5)", style: TextStyle(fontSize: 20)),
+                ],
+              ),
+
+
+              Row(
+                children: [
+                  Text("Sugar", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 20),
+                  Text("None", style: TextStyle(fontSize: 20)),
+                  Slider(
+                    min: 0,
+                    max: 100,
+                    value: slidervalue,
+                    divisions: 2,
+                    label: sugarLabel(slidervalue),
+                    onChanged: (value) {
+                      setState(() {
+                        slidervalue = value;
+                      });
+                    },
+                  ),
+                  Text("Normal", style: TextStyle(fontSize: 20)),
+                ],
+              ),
+
+
+              const SizedBox(height: 30),
+
+
+              ElevatedButton(
+                onPressed: () => showAlert(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  foregroundColor: Colors.white,
+                ),
+                child: Text("ORDER"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
