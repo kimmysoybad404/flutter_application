@@ -10,7 +10,8 @@ class Page3W7 extends StatefulWidget {
 class _Page3W7State extends State<Page3W7> {
   bool sw = false;
   double sliderValue2 = 0;
-  String TextSugar = "none";
+  String TextSugar = "no";
+  String LabelSugar = "none";
   String TypeHorC = "Hot";
   String TextCoffee = "Latte";
   int Baht = 35;
@@ -56,39 +57,46 @@ class _Page3W7State extends State<Page3W7> {
     setState(() {
       ThankText = "Thank you for your order!";
     });
+
+    int totalPrice = Baht;
     if (sw == true) {
-      Baht += 5;
+      totalPrice += 5;
     }
+
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Your order'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 150,
+                height: 150,
+                child: Image.asset(ImageCoffee[TypeCoffee], fit: BoxFit.cover),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '$TypeHorC $TextCoffee coffee with $TextSugar sugar.\nPrice = $totalPrice',
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Ok'),
+              child: const Text('Ok'),
             ),
           ],
-          content: Column(
-            children: [
-              Spacer(),
-              Image.asset(ImageCoffee[TypeCoffee]),
-              Spacer(),
-              Text(
-                '$TypeHorC $TextCoffee coffee with $TextSugar sugar. Price = $Baht',
-              ),
-              Spacer(),
-            ],
-          ),
         );
       },
     );
@@ -128,6 +136,18 @@ class _Page3W7State extends State<Page3W7> {
               child: Text("Your Order", style: TextStyle(fontSize: 30)),
             ),
 
+            const SizedBox(height: 10),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Coffee",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
             Column(children: radios),
 
             Padding(
@@ -153,16 +173,19 @@ class _Page3W7State extends State<Page3W7> {
                   max: 100,
                   value: sliderValue2,
                   divisions: 2,
-                  label: TextSugar,
+                  label: LabelSugar,
                   onChanged: (value) {
                     sliderValue2 = value;
                     setState(() {
                       if (value == 0) {
-                        TextSugar = "none";
+                        TextSugar = "no";
+                        LabelSugar = "none";
                       } else if (value == 50) {
                         TextSugar = "less";
+                        LabelSugar = "less";
                       } else if (value == 100) {
                         TextSugar = "normal";
+                        LabelSugar = "normal";
                       }
                     });
                   },
