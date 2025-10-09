@@ -5,6 +5,7 @@ import 'package:flutter_application/SmartHomeNaja/Page/SettingPage/Help_Center.d
 import 'package:flutter_application/SmartHomeNaja/Page/SettingPage/Lang.dart';
 import 'package:flutter_application/SmartHomeNaja/Page/SettingPage/Privacy_Policy.dart';
 import 'package:flutter_application/SmartHomeNaja/Page/SettingPage/Terms_of_Service.dart';
+import 'package:flutter_application/SmartHomeNaja/Page/SettingPage/wifi.dart';
 
 class Settingpage extends StatefulWidget {
   const Settingpage({super.key});
@@ -103,6 +104,20 @@ class _SettingpageState extends State<Settingpage> {
                   onTap: () => setState(() => notifOn = !notifOn),
                 ),
                 const _TileDivider(),
+
+                _SettingTile(
+                  icon: Icons.wifi,
+                  title: 'Wifi',
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const WifiPage()),
+                    );
+                  },
+                ),
+                const _TileDivider(),
+
                 _SettingTile(
                   icon: Icons.person_outline,
                   title: 'Accounts',
