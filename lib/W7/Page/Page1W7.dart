@@ -11,6 +11,13 @@ class _Page1W7State extends State<Page1W7> {
   String Date = "";
   String EndDate = "";
 
+  void initState() {
+    super.initState();
+    final now = DateTime.now();
+    Date = '${now.day}/${now.month}/${now.year}';
+    EndDate = '${now.day}/${now.month}/${now.year}';
+  }
+
   void selectDateStart() async {
     DateTime? dt = await showDatePicker(
       context: context,
