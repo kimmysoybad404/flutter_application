@@ -20,7 +20,7 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
   late AnimationController _animationController;
   final dbRef = FirebaseDatabase.instance.ref();
   final FlutterTts _tts = FlutterTts();
-   String NewText = "";
+  String NewText = "";
 
   Future<void> _speakText(String text) async {
     // 🧼 ลบ Emoji ออก (รองรับทั้ง iOS / Android / Web)
@@ -41,7 +41,7 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
       await _tts.setLanguage("th-TH");
     }
 
-    await _tts.setSpeechRate(0.9);
+    await _tts.setSpeechRate(0.8);
     await _tts.setVolume(1.0);
     await _tts.setPitch(1.0);
 
@@ -59,8 +59,9 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
     )..repeat();
 
     _tts.setVolume(1.0);
-    _tts.setSpeechRate(0.9);
+    _tts.setSpeechRate(0.8);
     _tts.setPitch(1.0);
+    _tts.awaitSpeakCompletion(true);
   }
 
   @override
@@ -213,10 +214,11 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
 
       if (!matched) {
         setState(() {
-            NewText = "❓ I don't understand the word: $text";
-          _recognizedText = "❓ I don't understand the word: $text";
+          NewText = "Command not found :";
+          _recognizedText = "❓ Command not found: $text";
         });
-        await _speakText(NewText); // 🗣 พูดคำที่ไม่รู้จัก
+        await _speakText(NewText);
+        await _speakText(text);
       }
     });
   }
