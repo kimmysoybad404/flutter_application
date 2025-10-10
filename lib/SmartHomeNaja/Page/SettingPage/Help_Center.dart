@@ -21,133 +21,176 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(137, 224, 224, 224),
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        elevation: 0,
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(136, 240, 240, 240),
-        title: const Text('Help Center'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
+        title: const Text(
+          'Help Center',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
+            // Header Icon
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.blue[50],
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.help_center,
+                size: 48,
+                color: Colors.blue[700],
+              ),
+            ),
+            const SizedBox(height: 24),
+
             // ---------- Quick Actions ----------
+            _SectionHeader(
+              icon: Icons.flash_on,
+              title: 'Quick Actions',
+            ),
+            const SizedBox(height: 12),
             _GroupCard(
               children: [
                 _SettingTile(
                   icon: Icons.bug_report_outlined,
+                  iconColor: Colors.red[400],
                   title: 'Report a Bug',
-                  trailing: const Icon(Icons.chevron_right),
+                  trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
                   onTap: () => _openFeedbackDialog(context, preset: '[BUG] '),
                 ),
                 const _TileDivider(),
                 _SettingTile(
                   icon: Icons.lightbulb_outline,
+                  iconColor: Colors.amber[600],
                   title: 'Send a Suggestion',
-                  trailing: const Icon(Icons.chevron_right),
+                  trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
                   onTap: () => _openFeedbackDialog(context, preset: '[SUGGESTION] '),
                 ),
                 const _TileDivider(),
                 _SettingTile(
                   icon: Icons.history,
+                  iconColor: Colors.blue[400],
                   title: 'View Command Logs (Device)',
-                  trailing: const Icon(Icons.chevron_right),
+                  trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
                   onTap: () {
-                    // TODO: นำทางไปหน้าดู Log ของอุปกรณ์ หากคุณทำไว้
-                    _toast(context, 'เปิดหน้าดู Log ของอุปกรณ์...');
+                    _toast(context, 'Opening device logs...');
                   },
                 ),
               ],
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 24),
 
             // ---------- FAQs ----------
+            _SectionHeader(
+              icon: Icons.quiz,
+              title: 'Frequently Asked Questions',
+            ),
+            const SizedBox(height: 12),
             _GroupCard(
               children: const [
                 _FaqTile(
-                  question: 'เชื่อมต่ออุปกรณ์ (ESP32) ยังไงให้เสถียร?',
+                  question: 'How to connect ESP32 device stably?',
                   answerBullets: [
-                    'เชื่อมต่อ Wi-Fi 2.4GHz และตั้งค่า SSID/รหัสผ่านให้ถูกต้อง',
-                    'ตั้งค่า Static IP (ถ้าจำเป็น) หรือจด DHCP lease ให้คงที่ที่เราเตอร์',
-                    'อัปเดตเฟิร์มแวร์ ESP32 และแอปให้เป็นเวอร์ชันล่าสุด',
+                    'Connect to 2.4GHz Wi-Fi and set SSID/password correctly',
+                    'Configure Static IP (if necessary) or reserve DHCP lease at router',
+                    'Update ESP32 firmware and app to the latest version',
                   ],
                 ),
                 _TileDivider(),
                 _FaqTile(
-                  question: 'ทำไมสั่งงานแล้วหลอดไฟไม่ตอบสนอง?',
+                  question: 'Why doesn\'t the light respond to commands?',
                   answerBullets: [
-                    'ตรวจสอบว่าอุปกรณ์ออนไลน์ (Ping IP ได้) และสายไฟ/รีเลย์ต่อถูกต้อง',
-                    'ดู Log ว่ามีคำสั่งถึงอุปกรณ์หรือไม่',
-                    'ลองรีสตาร์ทอุปกรณ์ และตรวจว่า Topic/Endpoint ตรงกับที่แอปตั้งค่า',
+                    'Check if device is online (can ping IP) and wiring/relay is correct',
+                    'Check logs to see if command reached the device',
+                    'Try restarting the device and verify Topic/Endpoint matches app settings',
                   ],
                 ),
                 _TileDivider(),
                 _FaqTile(
-                  question: 'จะแชร์สิทธิ์ให้คนในบ้านควบคุมได้อย่างไร?',
+                  question: 'How to share control with family members?',
                   answerBullets: [
-                    'สร้างบัญชีผู้ใช้/สมาชิกในบ้านในหน้า Accounts (ถ้ามีระบบ)',
-                    'ให้สิทธิ์เฉพาะอุปกรณ์ที่ต้องการ และถอนสิทธิ์ได้ทุกเมื่อ',
-                    'ตั้งรหัสผ่านที่รัดกุมและเปิดการยืนยันหลายชั้น (ถ้ามี)',
+                    'Create user accounts/home members in Accounts page (if available)',
+                    'Grant permissions for specific devices only and revoke anytime',
+                    'Set strong passwords and enable multi-factor authentication (if available)',
                   ],
                 ),
               ],
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 24),
 
             // ---------- Troubleshooting ----------
+            _SectionHeader(
+              icon: Icons.build,
+              title: 'Troubleshooting',
+            ),
+            const SizedBox(height: 12),
             _GroupCard(
               children: const [
                 _TroubleshootTile(
-                  title: 'การตั้งค่าเครือข่ายเบื้องต้น',
+                  title: 'Basic Network Setup',
                   steps: [
-                    'ใช้เราเตอร์ 2.4GHz (ESP32 มักไม่รองรับ 5GHz สำหรับโหมดทั่วไป)',
-                    'ปิด AP Isolation / Client Isolation ในเราเตอร์',
-                    'สงวน DHCP หรือกำหนด Static IP ให้ ESP32 เพื่อลดปัญหาหลุด',
-                    'เปิดพอร์ต/ไฟร์วอลล์ตามที่ระบบต้องใช้ (ถ้ามี MQTT/HTTP/WS)',
+                    'Use 2.4GHz router (ESP32 typically doesn\'t support 5GHz in standard mode)',
+                    'Disable AP Isolation / Client Isolation in router',
+                    'Reserve DHCP or assign Static IP to ESP32 to reduce disconnection issues',
+                    'Open ports/firewall as required by system (if using MQTT/HTTP/WS)',
                   ],
                 ),
                 _TileDivider(),
                 _TroubleshootTile(
-                  title: 'การจับคู่และค้นหาอุปกรณ์',
+                  title: 'Pairing and Device Discovery',
                   steps: [
-                    'ตรวจว่า ESP32 อยู่ในโหมด Pairing/Provisioning',
-                    'สแกนเครือข่ายภายในบ้านเพื่อตรวจพบอุปกรณ์',
-                    'ตรวจชื่ออุปกรณ์/Chip ID และผูกกับบัญชีให้ถูกต้อง',
+                    'Verify ESP32 is in Pairing/Provisioning mode',
+                    'Scan home network to detect devices',
+                    'Check device name/Chip ID and bind to account correctly',
                   ],
                 ),
                 _TileDivider(),
                 _TroubleshootTile(
-                  title: 'ความปลอดภัย',
+                  title: 'Security',
                   steps: [
-                    'อัปเดตเฟิร์มแวร์และรหัสผ่านเราเตอร์/แอปอย่างสม่ำเสมอ',
-                    'เปิดการเข้ารหัสการสื่อสาร (เช่น HTTPS/MQTT over TLS หากรองรับ)',
-                    'จำกัดสิทธิ์ผู้ใช้ตามความจำเป็น (หลักการ Least Privilege)',
+                    'Regularly update firmware and router/app passwords',
+                    'Enable encrypted communication (e.g., HTTPS/MQTT over TLS if supported)',
+                    'Limit user permissions as necessary (Least Privilege principle)',
                   ],
                 ),
               ],
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 24),
 
-            // ---------- Contact ----------
+            // ---------- Contact & Legal ----------
+            _SectionHeader(
+              icon: Icons.contact_support,
+              title: 'Contact & Legal',
+            ),
+            const SizedBox(height: 12),
             _GroupCard(
               children: [
                 _SettingTile(
                   icon: Icons.email_outlined,
+                  iconColor: Colors.green[400],
                   title: 'Contact Support (Email)',
-                  trailing: const Icon(Icons.chevron_right),
+                  trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
                   onTap: () {
-                    // ถ้าจะเปิดเมลจริง แนะนำใช้ url_launcher
-                    _toast(context, 'ติดต่อ: support@example.com');
+                    _toast(context, 'Contact: support@example.com');
                   },
                 ),
                 const _TileDivider(),
                 _SettingTile(
                   icon: Icons.privacy_tip_outlined,
+                  iconColor: Colors.purple[400],
                   title: 'Privacy Policy',
-                  trailing: const Icon(Icons.chevron_right),
+                  trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -158,8 +201,9 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                 const _TileDivider(),
                 _SettingTile(
                   icon: Icons.description_outlined,
+                  iconColor: Colors.orange[400],
                   title: 'Terms of Service',
-                  trailing: const Icon(Icons.chevron_right),
+                  trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -169,6 +213,8 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                 ),
               ],
             ),
+            
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -181,31 +227,50 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
       context: context,
       builder: (_) {
         return AlertDialog(
-          title: const Text('Send Feedback'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Row(
+            children: [
+              Icon(Icons.feedback, color: Colors.blue[600]),
+              const SizedBox(width: 8),
+              const Text('Send Feedback'),
+            ],
+          ),
           content: TextField(
             controller: _feedbackCtrl,
             maxLines: 6,
-            decoration: const InputDecoration(
-              hintText: 'อธิบายปัญหาหรือข้อเสนอแนะของคุณ...',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              hintText: 'Describe your issue or suggestion...',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.blue[400]!, width: 2),
+              ),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Colors.grey[600])),
             ),
             ElevatedButton(
               onPressed: () {
                 final msg = _feedbackCtrl.text.trim();
                 Navigator.pop(context);
                 if (msg.isEmpty) {
-                  _toast(context, 'กรุณาระบุข้อความ');
+                  _toast(context, 'Please enter a message', isError: true);
                   return;
                 }
-                // TODO: ส่งข้อความไปเซิร์ฟเวอร์/อีเมลของคุณ
-                _toast(context, 'ส่ง Feedback แล้ว ขอบคุณครับ!');
+                _toast(context, 'Feedback sent. Thank you!');
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue[600],
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
               child: const Text('Send'),
             ),
           ],
@@ -215,8 +280,36 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
   }
 }
 
-/// ---------- Helpers (UI) ----------
+/// ---------- Section Header ----------
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({
+    required this.icon,
+    required this.title,
+  });
 
+  final IconData icon;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: Colors.blue[700]),
+        const SizedBox(width: 8),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: Colors.blue[900],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// ---------- Helpers (UI) ----------
 class _GroupCard extends StatelessWidget {
   const _GroupCard({required this.children});
   final List<Widget> children;
@@ -228,8 +321,15 @@ class _GroupCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(children: children),
     );
   }
@@ -239,12 +339,14 @@ class _SettingTile extends StatelessWidget {
   const _SettingTile({
     required this.icon,
     required this.title,
+    this.iconColor,
     this.trailing,
     this.onTap,
   });
 
   final IconData icon;
   final String title;
+  final Color? iconColor;
   final Widget? trailing;
   final VoidCallback? onTap;
 
@@ -254,15 +356,15 @@ class _SettingTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
-            Icon(icon, size: 22),
+            Icon(icon, size: 22, color: iconColor ?? Colors.grey[700]),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
               ),
             ),
             if (trailing != null) trailing!,
@@ -278,9 +380,9 @@ class _TileDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 46),
-      child: Divider(height: 1, thickness: 1),
+    return Padding(
+      padding: const EdgeInsets.only(left: 50),
+      child: Divider(height: 1, thickness: 1, color: Colors.grey[200]),
     );
   }
 }
@@ -299,23 +401,44 @@ class _FaqTile extends StatelessWidget {
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
-        tilePadding: const EdgeInsets.symmetric(horizontal: 12),
+        tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        leading: const Icon(Icons.help_outline),
+        leading: Icon(Icons.help_outline, color: Colors.blue[400]),
         title: Text(
           question,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
         ),
-        childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
         children: [
           for (final a in answerBullets)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('•  ', style: TextStyle(fontSize: 14)),
-                Expanded(child: Text(a, style: const TextStyle(fontSize: 14, height: 1.4))),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6, left: 36),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 6),
+                    width: 5,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.blue[300],
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      a,
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.5,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
         ],
       ),
@@ -335,20 +458,44 @@ class _TroubleshootTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      tilePadding: const EdgeInsets.symmetric(horizontal: 12),
+      tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      leading: const Icon(Icons.build_outlined),
-      title: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-      childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      leading: Icon(Icons.build_outlined, color: Colors.orange[400]),
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+      ),
+      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       children: [
         for (final s in steps)
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('•  ', style: TextStyle(fontSize: 14)),
-              Expanded(child: Text(s, style: const TextStyle(fontSize: 14, height: 1.4))),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6, left: 36),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 6),
+                  width: 5,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.orange[300],
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    s,
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.5,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
       ],
     );
@@ -356,9 +503,24 @@ class _TroubleshootTile extends StatelessWidget {
 }
 
 /// ---------- Helpers (logic/UI feedback) ----------
-
-void _toast(BuildContext context, String msg) {
+void _toast(BuildContext context, String msg, {bool isError = false}) {
   ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(msg)),
+    SnackBar(
+      content: Row(
+        children: [
+          Icon(
+            isError ? Icons.error_outline : Icons.check_circle_outline,
+            color: Colors.white,
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Text(msg)),
+        ],
+      ),
+      backgroundColor: isError ? Colors.red[700] : Colors.green[700],
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.all(16),
+    ),
   );
 }
