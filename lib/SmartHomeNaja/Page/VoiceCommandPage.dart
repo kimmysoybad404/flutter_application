@@ -3,6 +3,7 @@ import 'package:flutter_application/SmartHomeNaja/Page/Appbar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'VoicePage/voice_helper.dart';
 import 'dart:math' as math;
+import 'package:flutter_tts/flutter_tts.dart';
 
 class VoiceCommandPage extends StatefulWidget {
   const VoiceCommandPage({super.key});
@@ -18,6 +19,36 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
   String _recognizedText = "Tap microphone to start";
   late AnimationController _animationController;
   final dbRef = FirebaseDatabase.instance.ref();
+  final FlutterTts _tts = FlutterTts();
+   String NewText = "";
+
+  Future<void> _speakText(String text) async {
+    // 🧼 ลบ Emoji ออก (รองรับทั้ง iOS / Android / Web)
+    final cleanedText = text.replaceAll(
+      RegExp(
+        r'[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]',
+        unicode: true,
+      ),
+      '',
+    );
+
+    // 🔎 ตรวจภาษา (อังกฤษหรือไม่)
+    final isEnglish = RegExp(r'[a-zA-Z]').hasMatch(cleanedText);
+
+    if (isEnglish) {
+      await _tts.setLanguage("en-US");
+    } else {
+      await _tts.setLanguage("th-TH");
+    }
+
+    await _tts.setSpeechRate(0.9);
+    await _tts.setVolume(1.0);
+    await _tts.setPitch(1.0);
+
+    if (cleanedText.trim().isNotEmpty) {
+      await _tts.speak(cleanedText.trim());
+    }
+  }
 
   @override
   void initState() {
@@ -26,6 +57,10 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     )..repeat();
+
+    _tts.setVolume(1.0);
+    _tts.setSpeechRate(0.9);
+    _tts.setPitch(1.0);
   }
 
   @override
@@ -61,7 +96,6 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
           "msgOn": "💡 ปิดไฟแล้ว",
           "msgAlready": "💡 ไฟปิดอยู่แล้ว",
         },
-
         {
           "keywords": ["เปิดพัดลม"],
           "path": "devices/fan",
@@ -76,7 +110,6 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
           "msgOn": "🌀 ปิดพัดลมแล้ว",
           "msgAlready": "🌀 พัดลมปิดอยู่แล้ว",
         },
-
         {
           "keywords": ["เปิดแอร์"],
           "path": "devices/ac",
@@ -92,7 +125,7 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
           "msgAlready": "❄️ แอร์ปิดอยู่แล้ว",
         },
 
-        // 🔸 ภาษาอังกฤษ (case insensitive)
+        // 🔸 ภาษาอังกฤษ
         {
           "keywords": ["turn on light"],
           "path": "devices/led",
@@ -107,7 +140,6 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
           "msgOn": "💡 Light turned OFF",
           "msgAlready": "💡 Light is already OFF",
         },
-
         {
           "keywords": ["turn on fan"],
           "path": "devices/fan",
@@ -122,7 +154,6 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
           "msgOn": "🌀 Fan turned OFF",
           "msgAlready": "🌀 Fan is already OFF",
         },
-
         {
           "keywords": ["turn on air"],
           "path": "devices/ac",
@@ -154,19 +185,25 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
               bool desired = cmd["action"] as bool;
 
               if (current == desired) {
+                final msg = cmd["msgAlready"] as String;
                 setState(() {
-                  _recognizedText = cmd["msgAlready"] as String;
+                  _recognizedText = msg;
                 });
+                await _speakText(msg); // 🗣 พูด
               } else {
                 await dbRef.child(cmd["path"] as String).set(desired);
+                final msg = cmd["msgOn"] as String;
                 setState(() {
-                  _recognizedText = cmd["msgOn"] as String;
+                  _recognizedText = msg;
                 });
+                await _speakText(msg); // 🗣 พูด
               }
             } else {
+              final msg = "⚠️ ไม่พบข้อมูล ${cmd["path"]}";
               setState(() {
-                _recognizedText = "⚠️ ไม่พบข้อมูล ${cmd["path"]}";
+                _recognizedText = msg;
               });
+              await _speakText(msg);
             }
             break;
           }
@@ -176,8 +213,10 @@ class _VoiceCommandPageState extends State<VoiceCommandPage>
 
       if (!matched) {
         setState(() {
+            NewText = "❓ I don't understand the word: $text";
           _recognizedText = "❓ I don't understand the word: $text";
         });
+        await _speakText(NewText); // 🗣 พูดคำที่ไม่รู้จัก
       }
     });
   }
