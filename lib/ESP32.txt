@@ -5,8 +5,8 @@
 #include <WiFiUdp.h>
 
 // -------------------- WiFi --------------------
-#define WIFI_SSID "FORD"
-#define WIFI_PASSWORD "ihavewifi"
+String WIFI_SSID = "";
+String WIFI_PASSWORD = "";
 
 // -------------------- Firebase --------------------
 #define API_KEY "AIzaSyBOOj-0XLlpUFdqdWFB6Fy2zQ75U54vRaU"
@@ -41,17 +41,46 @@ void setup() {
   pinMode(FAN, OUTPUT);
 
   // WiFi
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("Connecting to WiFi");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+  // ✅ ดึง SSID
+  if (Firebase.RTDB.getString(&fbdo, "/ConfigWifi/ssid")) {
+    WIFI_SSID = fbdo.stringData();
+    Serial.print("📡 SSID: ");
+    Serial.println(WIFI_SSID);
+  } else {
+    Serial.print("❌ Error SSID: ");
+    Serial.println(fbdo.errorReason());
   }
-  Serial.println("\n✅ WiFi connected");
 
+  // ✅ ดึง PASSWORD
+  if (Firebase.RTDB.getString(&fbdo, "/ConfigWifi/password")) {
+    WIFI_PASSWORD = fbdo.stringData();
+    Serial.print("🔑 Password: ");
+    Serial.println(WIFI_PASSWORD);
+  } else {
+    Serial.print("❌ Error Password: ");
+    Serial.println(fbdo.errorReason());
+  }
+
+  // ✅ เชื่อม WiFi จากค่าที่ได้
+  if (WIFI_SSID != "" && WIFI_PASSWORD != "") {
+    Serial.println("📶 กำลังเชื่อม WiFi ที่ดึงมาจาก Firebase ...");
+    WiFi.begin(WIFI_SSID.c_str(), WIFI_PASSWORD.c_str());
+
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+    }
+    Serial.println("\n✅ WiFi Connected!");
+    Serial.print("📍 IP Address: ");
+    Serial.println(WiFi.localIP());
+  } else {
+    Serial.println("⚠️ ไม่มี WiFi SSID/PASSWORD ใน Firebase");
+  }
   // Firebase
   config.api_key = API_KEY;
   config.database_url = DATABASE_URL;
+
+
 
   if (Firebase.signUp(&config, &auth, "", "")) {
     Serial.println("✅ Firebase SignUp OK");
