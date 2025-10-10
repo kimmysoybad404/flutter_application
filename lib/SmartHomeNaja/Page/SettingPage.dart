@@ -20,223 +20,301 @@ class _SettingpageState extends State<Settingpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(137, 224, 224, 224),
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.blueAccent,
+        foregroundColor: Colors.white,
         title: const Text(
-          "Setting",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          'Settings',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ---------- Profile card ----------
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 26,
-                    child: Icon(Icons.person, size: 28),
-                  ),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                    child: Text(
-                      'Mr.อยากได้ A',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+            _GroupCard(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: Colors.blue[100],
+                        shape: BoxShape.circle,
                       ),
-                      overflow: TextOverflow.ellipsis,
+                      child: Icon(Icons.person, size: 28, color: Colors.blueAccent),
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 12),
+                    const Expanded(
+                      child: Text(
+                        'Mr.อยากได้ A',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
             const _SectionHeader('General'),
             const SizedBox(height: 8),
 
             // ---------- Group 1 ----------
             _GroupCard(
-              children: [
-                _SettingTile(
-                  icon: Icons.notifications_none,
-                  title: 'Notification',
-                  trailing: SwitchTheme(
-                    data: SwitchThemeData(
-                      trackColor: MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.selected)) {
-                          return Colors.blue;
-                        }
-                        return const Color.fromARGB(255, 207, 207, 207);
-                      }),
-                      thumbColor: MaterialStateProperty.all(Colors.white),
-                      trackOutlineColor: MaterialStateProperty.resolveWith((
-                        states,
-                      ) {
-                        if (states.contains(MaterialState.selected)) {
-                          return Colors.blueAccent;
-                        }
-                        return const Color.fromARGB(255, 207, 207, 207);
-                      }),
+              child: Column(
+                children: [
+                  _SettingTile(
+                    icon: Icons.notifications_none,
+                    iconColor: Colors.orange,
+                    iconBgColor: Colors.orange[50]!,
+                    title: 'Notification',
+                    trailing: SwitchTheme(
+                      data: SwitchThemeData(
+                        trackColor: MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return Colors.orange;
+                          }
+                          return Colors.grey[300];
+                        }),
+                        thumbColor: MaterialStateProperty.all(Colors.white),
+                      ),
+                      child: Switch(
+                        value: notifOn,
+                        onChanged: (v) {
+                          setState(() {
+                            notifOn = v;
+                          });
+                        },
+                      ),
                     ),
-                    child: Switch(
-                      value: notifOn,
-                      onChanged: (v) {
-                        setState(() {
-                          notifOn = v;
-                        });
-                      },
-                    ),
+                    onTap: () => setState(() => notifOn = !notifOn),
                   ),
-
-                  onTap: () => setState(() => notifOn = !notifOn),
-                ),
-                const _TileDivider(),
-
-                _SettingTile(
-                  icon: Icons.wifi,
-                  title: 'Wifi',
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const WifiPage()),
-                    );
-                  },
-                ),
-                const _TileDivider(),
-
-                _SettingTile(
-                  icon: Icons.person_outline,
-                  title: 'Accounts',
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const AccountsPage()),
-                    );
-                  },
-                ),
-                const _TileDivider(),
-                _SettingTile(
-                  icon: Icons.language_outlined,
-                  title: 'Languages',
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const LanguagesPage()),
-                    );
-                  },
-                ),
-              ],
+                  _TileDivider(),
+                  _SettingTile(
+                    icon: Icons.wifi,
+                    iconColor: Colors.blue,
+                    iconBgColor: Colors.blue[50]!,
+                    title: 'WiFi',
+                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const WifiPage()),
+                      );
+                    },
+                  ),
+                  _TileDivider(),
+                  _SettingTile(
+                    icon: Icons.person_outline,
+                    iconColor: Colors.purple,
+                    iconBgColor: Colors.purple[50]!,
+                    title: 'Accounts',
+                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const AccountsPage()),
+                      );
+                    },
+                  ),
+                  _TileDivider(),
+                  _SettingTile(
+                    icon: Icons.language_outlined,
+                    iconColor: Colors.green,
+                    iconBgColor: Colors.green[50]!,
+                    title: 'Languages',
+                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const LanguagesPage()),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
             // ---------- Group 2 (Bugs / Help Center) ----------
             _GroupCard(
-              children: [
-                _SettingTile(
-                  icon: Icons.bug_report_outlined,
-                  title: 'Bugs and Suggestions',
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const BugsAndSuggestionsPage(),
-                      ),
-                    );
-                  },
-                ),
-                _TileDivider(),
-                _SettingTile(
-                  icon: Icons.headphones_outlined,
-                  title: 'Help Center',
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const HelpCenterPage()),
-                    );
-                  },
-                ),
-              ],
+              child: Column(
+                children: [
+                  _SettingTile(
+                    icon: Icons.bug_report_outlined,
+                    iconColor: Colors.red,
+                    iconBgColor: Colors.red[50]!,
+                    title: 'Bugs and Suggestions',
+                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const BugsAndSuggestionsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  _TileDivider(),
+                  _SettingTile(
+                    icon: Icons.headphones_outlined,
+                    iconColor: Colors.teal,
+                    iconBgColor: Colors.teal[50]!,
+                    title: 'Help Center',
+                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const HelpCenterPage()),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
             const _SectionHeader('More Information'),
             const SizedBox(height: 8),
 
             _GroupCard(
-              children: [
-                _SettingTile(
-                  icon: Icons.policy_outlined,
-                  title: 'Privacy Policy',
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const PrivacyPolicyPage(),
-                      ),
-                    );
-                  },
-                ),
-                _TileDivider(),
-                _SettingTile(
-                  icon: Icons.description_outlined,
-                  title: 'Terms of Service',
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const TermsOfServicePage(),
-                      ),
-                    );
-                  },
-                ),
-              ],
+              child: Column(
+                children: [
+                  _SettingTile(
+                    icon: Icons.policy_outlined,
+                    iconColor: Colors.indigo,
+                    iconBgColor: Colors.indigo[50]!,
+                    title: 'Privacy Policy',
+                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const PrivacyPolicyPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  _TileDivider(),
+                  _SettingTile(
+                    icon: Icons.description_outlined,
+                    iconColor: Colors.amber[700]!,
+                    iconBgColor: Colors.amber[50]!,
+                    title: 'Terms of Service',
+                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const TermsOfServicePage(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
-            // ---------- Logout (single card) ----------
-            _GroupCardLogut(
-              children: const [
-                _SettingTileLogut(
-                  icon: Icons.power_settings_new,
-                  title: 'Logout',
-                  trailing: Icon(Icons.chevron_right, color: Colors.white),
+            // ---------- Logout ----------
+            _GroupCard(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.redAccent, Colors.red[700]!],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-              ],
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () => _confirmLogout(context),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      child: Row(
+                        children: const [
+                          Icon(Icons.power_settings_new, size: 24, color: Colors.white),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'Logout',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          Icon(Icons.chevron_right, color: Colors.white),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
+  void _confirmLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(Icons.power_settings_new, color: Colors.redAccent),
+            const SizedBox(width: 8),
+            const Text('Logout'),
+          ],
+        ),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel', style: TextStyle(color: Colors.grey[600])),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              _toast(context, 'Logged out successfully');
+            },
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-/// ----------------- Helper Widgets -----------------
+// ---------- Helper Widgets ----------
 
-/// หัวข้อส่วน (ตัวหนังสือเล็กด้านบนของกลุ่มการ์ด)
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader(this.text, {super.key});
+  const _SectionHeader(this.text);
   final String text;
 
   @override
@@ -245,16 +323,19 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+          color: Colors.blue[900],
+        ),
       ),
     );
   }
 }
 
-/// กล่องกลุ่มรายการ (พื้นหลังขาว มุมมน)
 class _GroupCard extends StatelessWidget {
-  const _GroupCard({required this.children, super.key});
-  final List<Widget> children;
+  const _GroupCard({required this.child});
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -263,126 +344,105 @@ class _GroupCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Column(children: children),
+      child: child,
     );
   }
 }
 
-class _GroupCardLogut extends StatelessWidget {
-  const _GroupCardLogut({required this.children, super.key});
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.redAccent,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Column(children: children),
-    );
-  }
-}
-
-/// หนึ่งแถวของรายการตั้งค่า
 class _SettingTile extends StatelessWidget {
   const _SettingTile({
     required this.icon,
     required this.title,
+    this.iconColor,
+    this.iconBgColor,
     this.trailing,
     this.onTap,
-    super.key,
   });
 
   final IconData icon;
   final String title;
+  final Color? iconColor;
+  final Color? iconBgColor;
   final Widget? trailing;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(12),
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-        child: Row(
-          children: [
-            Icon(icon, size: 22),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: iconBgColor ?? Colors.blue[50],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, size: 20, color: iconColor ?? Colors.blueAccent),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
-            if (trailing != null) trailing!,
-          ],
+              if (trailing != null) trailing!,
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _SettingTileLogut extends StatelessWidget {
-  const _SettingTileLogut({
-    required this.icon,
-    required this.title,
-    this.trailing,
-    this.onTap,
-    super.key,
-  });
-
-  final IconData icon;
-  final String title;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(12),
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-        child: Row(
-          children: [
-            Icon(icon, size: 22, color: Colors.white),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            if (trailing != null) trailing!,
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// เส้นแบ่งระหว่างแถว (บางๆ มาขยับให้ไม่ชนไอคอน)
 class _TileDivider extends StatelessWidget {
-  const _TileDivider({super.key});
+  const _TileDivider();
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 46),
-      child: Divider(height: 1, thickness: 1),
+    return Padding(
+      padding: const EdgeInsets.only(left: 64),
+      child: Divider(height: 1, thickness: 1, color: Colors.grey[200]),
     );
   }
+}
+
+void _toast(BuildContext context, String msg, {bool isError = false}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Row(
+        children: [
+          Icon(
+            isError ? Icons.error_outline : Icons.check_circle_outline,
+            color: Colors.white,
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Text(msg)),
+        ],
+      ),
+      backgroundColor: isError ? Colors.red[700] : Colors.green[700],
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.all(16),
+    ),
+  );
 }

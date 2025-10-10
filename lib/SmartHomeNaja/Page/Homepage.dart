@@ -19,13 +19,29 @@ class _HomepageState extends State<Homepage> {
   Timer? _timer;
 
   List<Map<String, dynamic>> devices = [
-    {"name": "LED", "room": "Bedroom", "icon": Icons.lightbulb, "isOn": false},
-    {"name": "Fan", "room": "Living Room", "icon": Icons.air, "isOn": false},
+    {
+      "name": "LED",
+      "room": "Bedroom",
+      "icon": Icons.lightbulb,
+      "isOn": false,
+      "color": Colors.amber,
+      "bgColor": Colors.amber.shade50,
+    },
+    {
+      "name": "Fan",
+      "room": "Living Room",
+      "icon": Icons.air,
+      "isOn": false,
+      "color": Colors.blue,
+      "bgColor": Colors.blue.shade50,
+    },
     {
       "name": "Air Conditioner",
       "room": "Office",
       "icon": Icons.ac_unit,
       "isOn": false,
+      "color": Colors.cyan,
+      "bgColor": Colors.cyan.shade50,
     },
   ];
 
@@ -45,72 +61,78 @@ class _HomepageState extends State<Homepage> {
   }
 
   void getLatestWeather() {
-  final todayPath = getTodayPath();
-  final tempRef = dbRef.child("weather/$todayPath");
+    final todayPath = getTodayPath();
+    final tempRef = dbRef.child("weather/$todayPath");
 
-  tempRef.orderByKey().limitToLast(1).onValue.listen((event) {
-    if (event.snapshot.value != null) {
-      final raw = Map<String, dynamic>.from(event.snapshot.value as Map);
+    tempRef.orderByKey().limitToLast(1).onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        final raw = Map<String, dynamic>.from(event.snapshot.value as Map);
 
-      String lastTemp = "--";
-      raw.forEach((key, value) {
-        if (value is Map && value["temperature"] != null) {
-          lastTemp = value["temperature"].toString().split(" ").first;
-        }
-      });
+        String lastTemp = "--";
+        raw.forEach((key, value) {
+          if (value is Map && value["temperature"] != null) {
+            lastTemp = value["temperature"].toString().split(" ").first;
+          }
+        });
 
-      setState(() {
-        temperature = "$lastTemp °C"; 
-      });
-    }
-  });
-}
+        setState(() {
+          temperature = "$lastTemp °C";
+        });
+      }
+    });
+  }
 
   void loadDeviceStates() {
-  dbRef.child("devices").onValue.listen((event) {
-    if (event.snapshot.value != null) {
-      final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+    dbRef.child("devices").onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        final data = Map<String, dynamic>.from(event.snapshot.value as Map);
 
-      setState(() {
-        devices = [
-          {
-            "name": "LED",
-            "room": "Bedroom",
-            "icon": Icons.lightbulb,
-            "isOn": data["led"] ?? false,
-          },
-          {
-            "name": "Fan",
-            "room": "Living Room",
-            "icon": Icons.air,
-            "isOn": data["fan"] ?? false,
-          },
-          {
-            "name": "Air Conditioner",
-            "room": "Office",
-            "icon": Icons.ac_unit,
-            "isOn": data["ac"] ?? false,
-          },
-        ];
-      });
-    }
-  });
-}
+        setState(() {
+          devices = [
+            {
+              "name": "LED",
+              "room": "Bedroom",
+              "icon": Icons.lightbulb,
+              "isOn": data["led"] ?? false,
+              "color": Colors.amber,
+              "bgColor": Colors.amber.shade50,
+            },
+            {
+              "name": "Fan",
+              "room": "Living Room",
+              "icon": Icons.air,
+              "isOn": data["fan"] ?? false,
+              "color": Colors.blue,
+              "bgColor": Colors.blue.shade50,
+            },
+            {
+              "name": "Air Conditioner",
+              "room": "Office",
+              "icon": Icons.ac_unit,
+              "isOn": data["ac"] ?? false,
+              "color": Colors.cyan,
+              "bgColor": Colors.cyan.shade50,
+            },
+          ];
+        });
+      }
+    });
+  }
 
   void toggleDevice(String deviceName, bool value) {
-  setState(() {
-    final device = devices.firstWhere((d) => d["name"] == deviceName);
-    device["isOn"] = value;
-  });
+    setState(() {
+      final device = devices.firstWhere((d) => d["name"] == deviceName);
+      device["isOn"] = value;
+    });
 
-  if (deviceName == "LED") {
-    dbRef.child("devices/led").set(value);
-  } else if (deviceName == "Fan") {
-    dbRef.child("devices/fan").set(value);
-  } else if (deviceName == "Air Conditioner") {
-    dbRef.child("devices/ac").set(value);
+    if (deviceName == "LED") {
+      dbRef.child("devices/led").set(value);
+    } else if (deviceName == "Fan") {
+      dbRef.child("devices/fan").set(value);
+    } else if (deviceName == "Air Conditioner") {
+      dbRef.child("devices/ac").set(value);
+    }
   }
-}
 
   @override
   void initState() {
@@ -138,11 +160,34 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
+  Color getWeatherGradientStart() {
+    final hour = DateTime.now().hour;
+    if (hour >= 6 && hour < 18) {
+      return Colors.orange.shade400;
+    } else if (hour >= 18 && hour < 20) {
+      return Colors.blue.shade400;
+    } else {
+      return Colors.indigo.shade700;
+    }
+  }
+
+  Color getWeatherGradientEnd() {
+    final hour = DateTime.now().hour;
+    if (hour >= 6 && hour < 18) {
+      return Colors.amber.shade600;
+    } else if (hour >= 18 && hour < 20) {
+      return Colors.purple.shade400;
+    } else {
+      return Colors.purple.shade900;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(137, 224, 224, 224),
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.blueAccent,
         title: const Text(
@@ -150,155 +195,283 @@ class _HomepageState extends State<Homepage> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          Center(
-            child: SizedBox(
-              height: 100,
-              width: 340,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 15,
-                ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 8),
+              
+              // Weather Card with Gradient
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.blueAccent,
+                  gradient: LinearGradient(
+                    colors: [
+                      getWeatherGradientStart(),
+                      getWeatherGradientEnd(),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: getWeatherGradientStart().withOpacity(0.3),
+                      blurRadius: 15,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(getWeatherIcon(), color: Colors.white, size: 50),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          day,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          "Time : $time",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      temperature,
-                      style: const TextStyle(
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        getWeatherIcon(),
                         color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        size: 40,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            day,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            time,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Text(
+                        temperature,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ),
-          const SizedBox(height: 20),
 
-          SizedBox(
-            height: 350,
-            width: 350,
-            child: GridView.builder(
-              padding: const EdgeInsets.all(12),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 1,
-              ),
-              itemCount: devices.length,
-              itemBuilder: (context, index) {
-                var device = devices[index];
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+              const SizedBox(height: 24),
+
+              // Section Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'My Devices',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800],
+                    ),
                   ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 236, 236, 236),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              device["icon"],
-                              color: Colors.black,
-                              size: 28,
-                            ),
-                          ),
-                          const Spacer(),
-                          SwitchTheme(
-                            data: SwitchThemeData(
-                              trackColor: MaterialStateProperty.resolveWith((
-                                states,
-                              ) {
-                                if (states.contains(MaterialState.selected)) {
-                                  return Colors.blue;
-                                }
-                                return const Color.fromARGB(255, 207, 207, 207);
-                              }),
-                              thumbColor: MaterialStateProperty.all(
-                                Colors.white,
+                  Text(
+                    '${devices.length} devices',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // Devices Grid
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 0.95,
+                ),
+                itemCount: devices.length,
+                itemBuilder: (context, index) {
+                  var device = devices[index];
+                  final isOn = device["isOn"] as bool;
+                  
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () {
+                          toggleDevice(device["name"], !isOn);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: isOn 
+                                          ? device["color"].withOpacity(0.2)
+                                          : Colors.grey.shade100,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Icon(
+                                      device["icon"],
+                                      color: isOn 
+                                          ? device["color"]
+                                          : Colors.grey.shade400,
+                                      size: 28,
+                                    ),
+                                  ),
+                                  SwitchTheme(
+                                    data: SwitchThemeData(
+                                      trackColor: MaterialStateProperty.resolveWith(
+                                        (states) {
+                                          if (states.contains(MaterialState.selected)) {
+                                            return device["color"];
+                                          }
+                                          return Colors.grey[300];
+                                        },
+                                      ),
+                                      thumbColor: MaterialStateProperty.all(Colors.white),
+                                    ),
+                                    child: Switch(
+                                      value: isOn,
+                                      onChanged: (val) {
+                                        toggleDevice(device["name"], val);
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                              trackOutlineColor:
-                                  MaterialStateProperty.resolveWith((states) {
-                                    if (states.contains(
-                                      MaterialState.selected,
-                                    )) {
-                                      return Colors.blueAccent;
-                                    }
-                                    return const Color.fromARGB(
-                                      255,
-                                      207,
-                                      207,
-                                      207,
-                                    );
-                                  }),
-                            ),
-                            child: Switch(
-                              value: device["isOn"],
-                              onChanged: (val) {
-                                toggleDevice(device["name"], val);
-                              },
-                            ),
+                              const Spacer(),
+                              Text(
+                                device["name"],
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on_outlined,
+                                    size: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      device["room"],
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey[600],
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isOn 
+                                      ? Colors.green.shade50
+                                      : Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 6,
+                                      height: 6,
+                                      decoration: BoxDecoration(
+                                        color: isOn 
+                                            ? Colors.green
+                                            : Colors.grey,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      isOn ? 'Active' : 'Inactive',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: isOn 
+                                            ? Colors.green.shade700
+                                            : Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Text(
-                        device["name"],
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
-                        device["room"],
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
