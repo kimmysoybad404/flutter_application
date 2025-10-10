@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/SmartHomeNaja/Page/Appbar.dart';
 import 'package:flutter_application/SmartHomeNaja/Page/SettingPage/Accounts.dart';
 import 'package:flutter_application/SmartHomeNaja/Page/SettingPage/Bugs.dart';
 import 'package:flutter_application/SmartHomeNaja/Page/SettingPage/Help_Center.dart';
@@ -21,16 +22,7 @@ class _SettingpageState extends State<Settingpage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        backgroundColor: Colors.blueAccent,
-        foregroundColor: Colors.white,
-        title: const Text(
-          'Settings',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
+      appBar: settingsAppBar(context),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -49,7 +41,11 @@ class _SettingpageState extends State<Settingpage> {
                         color: Colors.blue[100],
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.person, size: 28, color: Colors.blueAccent),
+                      child: Icon(
+                        Icons.person,
+                        size: 28,
+                        color: Colors.blueAccent,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     const Expanded(
@@ -107,7 +103,10 @@ class _SettingpageState extends State<Settingpage> {
                     iconColor: Colors.blue,
                     iconBgColor: Colors.blue[50]!,
                     title: 'WiFi',
-                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey,
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -121,7 +120,10 @@ class _SettingpageState extends State<Settingpage> {
                     iconColor: Colors.purple,
                     iconBgColor: Colors.purple[50]!,
                     title: 'Accounts',
-                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey,
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -135,11 +137,16 @@ class _SettingpageState extends State<Settingpage> {
                     iconColor: Colors.green,
                     iconBgColor: Colors.green[50]!,
                     title: 'Languages',
-                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey,
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const LanguagesPage()),
+                        MaterialPageRoute(
+                          builder: (_) => const LanguagesPage(),
+                        ),
                       );
                     },
                   ),
@@ -158,7 +165,10 @@ class _SettingpageState extends State<Settingpage> {
                     iconColor: Colors.red,
                     iconBgColor: Colors.red[50]!,
                     title: 'Bugs and Suggestions',
-                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey,
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -174,11 +184,16 @@ class _SettingpageState extends State<Settingpage> {
                     iconColor: Colors.teal,
                     iconBgColor: Colors.teal[50]!,
                     title: 'Help Center',
-                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey,
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const HelpCenterPage()),
+                        MaterialPageRoute(
+                          builder: (_) => const HelpCenterPage(),
+                        ),
                       );
                     },
                   ),
@@ -198,7 +213,10 @@ class _SettingpageState extends State<Settingpage> {
                     iconColor: Colors.indigo,
                     iconBgColor: Colors.indigo[50]!,
                     title: 'Privacy Policy',
-                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey,
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -214,7 +232,10 @@ class _SettingpageState extends State<Settingpage> {
                     iconColor: Colors.amber[700]!,
                     iconBgColor: Colors.amber[50]!,
                     title: 'Terms of Service',
-                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey,
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -247,10 +268,17 @@ class _SettingpageState extends State<Settingpage> {
                     borderRadius: BorderRadius.circular(16),
                     onTap: () => _confirmLogout(context),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
                       child: Row(
                         children: const [
-                          Icon(Icons.power_settings_new, size: 24, color: Colors.white),
+                          Icon(
+                            Icons.power_settings_new,
+                            size: 24,
+                            color: Colors.white,
+                          ),
                           SizedBox(width: 12),
                           Expanded(
                             child: Text(
@@ -297,7 +325,9 @@ class _SettingpageState extends State<Settingpage> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.redAccent,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -392,7 +422,11 @@ class _SettingTile extends StatelessWidget {
                   color: iconBgColor ?? Colors.blue[50],
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, size: 20, color: iconColor ?? Colors.blueAccent),
+                child: Icon(
+                  icon,
+                  size: 20,
+                  color: iconColor ?? Colors.blueAccent,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
