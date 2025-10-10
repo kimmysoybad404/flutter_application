@@ -5,8 +5,8 @@
 #include <WiFiUdp.h>
 
 // -------------------- WiFi --------------------
-#define WIFI_SSID "Kimmy"
-#define WIFI_PASSWORD "kimmy1234"
+#define WIFI_SSID "FORD"
+#define WIFI_PASSWORD "ihavewifi"
 
 // -------------------- Firebase --------------------
 #define API_KEY "AIzaSyBOOj-0XLlpUFdqdWFB6Fy2zQ75U54vRaU"
@@ -21,106 +21,24 @@ FirebaseConfig config;
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
 
+// -------------------- LED / FAN --------------------
+int LED1 = 25;
+int LED2 = 14;
+int FAN = 26;
+
 // -------------------- NTP (เวลา) --------------------
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org", 7 * 3600); // GMT+7
+NTPClient timeClient(ntpUDP, "pool.ntp.org", 7 * 3600);  // GMT+7
+
+// -------------------- Timing --------------------
+unsigned long lastTempTime = 0;
+unsigned long lastDeviceCheck = 0;
 
 void setup() {
   Serial.begin(115200);
-
-  // -------------------- WiFi --------------------
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("Connecting to WiFi");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("\n✅ WiFi connected");
-
-  // -------------------- Firebase --------------------
-  config.api_key = API_KEY;
-  config.database_url = DATABASE_URL;
-
-  // anonymous login
-  if (Firebase.signUp(&config, &auth, "", "")) {
-    Serial.println("✅ Firebase SignUp OK");
-  } else {
-    Serial.printf("❌ Firebase SignUp failed: %s\n",
-                  config.signer.signupError.message.c_str());
-  }
-
-  // ตั้งค่า timeout กัน SSL ปิดเอง
-  config.timeout.serverResponse = 10 * 1000;      
-  config.timeout.socketConnection = 10 * 1000;
-  config.timeout.sslHandshake = 10 * 1000;
-  config.timeout.rtdbKeepAlive = 45 * 1000;       
-
-  Firebase.begin(&config, &auth);
-  Firebase.reconnectWiFi(true);
-
-  dht.begin();
-  timeClient.begin();
-  Serial.println("✅ DHT22 sensor ready");
-}
-
-void loop() {
-  timeClient.update();
-
-  float temp = dht.readTemperature();
-
-  if (!isnan(temp)) {
-    // อุณหภูมิเป็นข้อความ เช่น "30 องศา"
-    String Temptxt = String(temp, 0) + " °C";
-
-    // วันที่แบบ YYYY-MM-DD
-    time_t rawTime = timeClient.getEpochTime();
-    struct tm *ti = localtime(&rawTime);
-    char dateStr[20];
-    sprintf(dateStr, "%04d-%02d-%02d", ti->tm_year + 1900, ti->tm_mon + 1, ti->tm_mday);
-
-    // เวลาแบบ HH:MM:SS
-    String timeStr = timeClient.getFormattedTime();
-
-    Serial.printf("🌡 Temp: %s | 📅 %s 🕒 %s\n", Temptxt.c_str(), dateStr, timeStr.c_str());
-
-    if (Firebase.ready()) {
-      Serial.println("🔥 Firebase is ready, sending...");
-
-      #include <WiFi.h>
-#include <Firebase_ESP_Client.h>
-#include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BMP085.h>
-#include <DHT.h>
-#include <BH1750FVI.h>
-
-// -------------------- WiFi --------------------
-#define WIFI_SSID "Kimmy"
-#define WIFI_PASSWORD "kimmy1234"
-
-// -------------------- Firebase --------------------
-#define API_KEY "AIzaSyBOOj-0XLlpUFdqdWFB6Fy2zQ75U54vRaU"   // <-- ใส่ apiKey ของคุณ
-#define DATABASE_URL "https://smarthomea-43c25-default-rtdb.asia-southeast1.firebasedatabase.app/"
-
-FirebaseData fbdo;
-FirebaseAuth auth;
-FirebaseConfig config;
-
-// -------------------- Sensors --------------------
-#define DHTPIN 4
-#define DHTTYPE DHT22
-#define SDA_PIN 21
-#define SCL_PIN 22
-
-volatile int pulseCount = 0;
-float windSpeed_mps = 0.0;
-float windSpeed_kph = 0.0;
-
-DHT dht(DHTPIN, DHTTYPE);
-
-void setup() {
-  Serial.begin(115200);
-  Wire.begin(SDA_PIN, SCL_PIN);
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(FAN, OUTPUT);
 
   // WiFi
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -134,70 +52,96 @@ void setup() {
   // Firebase
   config.api_key = API_KEY;
   config.database_url = DATABASE_URL;
+
+  if (Firebase.signUp(&config, &auth, "", "")) {
+    Serial.println("✅ Firebase SignUp OK");
+  } else {
+    Serial.printf("❌ Firebase SignUp failed: %s\n", config.signer.signupError.message.c_str());
+  }
+
+  config.timeout.serverResponse = 10 * 1000;
+  config.timeout.socketConnection = 10 * 1000;
+  config.timeout.sslHandshake = 10 * 1000;
+  config.timeout.rtdbKeepAlive = 45 * 1000;
+
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
 
   dht.begin();
+  timeClient.begin();
   Serial.println("✅ DHT22 sensor ready");
 }
 
 void loop() {
-  Serial.println("==============================");
+  timeClient.update();
 
-  // DHT22
-  float temperatureDHT = dht.readTemperature();
+  // -------------------- 1. อ่านอุณหภูมิและความชื้นทุก 10 วิ --------------------
+  if (millis() - lastTempTime >= 10000) {
+    lastTempTime = millis();
 
-  if (isnan(temperatureDHT)) {
-    Serial.println("❌ Failed to read DHT22");
-  } else {
-    Serial.printf("🌡 DHT22 Temperature: %.2f °C\n", temperatureDHT);
+    float temp = dht.readTemperature();
+    float humi = dht.readHumidity();
 
-    // -------------------- ส่งขึ้น Firebase --------------------
+    if (!isnan(temp) && !isnan(humi)) {
+      String tempTxt = String(temp, 1) + " °C";
+      String humiTxt = String(humi, 1) + " %";
+
+      time_t rawTime = timeClient.getEpochTime();
+      struct tm *ti = localtime(&rawTime);
+      char dateStr[20];
+      sprintf(dateStr, "%04d-%02d-%02d", ti->tm_year + 1900, ti->tm_mon + 1, ti->tm_mday);
+      String timeStr = timeClient.getFormattedTime();
+
+      Serial.printf("🌡 Temp: %s | 💧 Humi: %s | 📅 %s 🕒 %s\n", tempTxt.c_str(), humiTxt.c_str(), dateStr, timeStr.c_str());
+
+      if (Firebase.ready()) {
+        String pathTemp = "/weather/" + String(dateStr) + "/" + timeStr + "/temperature";
+        String pathHumi = "/weather/" + String(dateStr) + "/" + timeStr + "/humidity";
+
+        if (Firebase.RTDB.setString(&fbdo, pathTemp.c_str(), tempTxt)) {
+          Serial.println("✅ Temp saved to Firebase");
+        } else {
+          Serial.printf("❌ Firebase Temp error: %s\n", fbdo.errorReason().c_str());
+        }
+
+        if (Firebase.RTDB.setString(&fbdo, pathHumi.c_str(), humiTxt)) {
+          Serial.println("✅ Humi saved to Firebase");
+        } else {
+          Serial.printf("❌ Firebase Humi error: %s\n", fbdo.errorReason().c_str());
+        }
+      }
+    } else {
+      Serial.println("❌ Failed to read DHT22");
+    }
+  }
+
+  // -------------------- 2. เช็กสถานะอุปกรณ์ทุก 1 วิ --------------------
+  if (millis() - lastDeviceCheck >= 1000) {
+    lastDeviceCheck = millis();
+
     if (Firebase.ready()) {
-
-    if (Firebase.RTDB.getBool(&fbdo, "/devices/led")) {
-      bool ledStatus = fbdo.boolData();
-      Serial.print("💡 LED is ");
-      Serial.println(ledStatus ? "ON" : "OFF");
-    }
-
-    if (Firebase.RTDB.getBool(&fbdo, "/devices/fan")) {
-      bool fanStatus = fbdo.boolData();
-      Serial.print("🌀 FAN is ");
-      Serial.println(fanStatus ? "ON" : "OFF");
-    }
-
-    if (Firebase.RTDB.getBool(&fbdo, "/devices/ac")) {
-      bool acStatus = fbdo.boolData();
-      Serial.print("❄️ AC is ");
-      Serial.println(acStatus ? "ON" : "OFF");
-    }
-      if (Firebase.RTDB.setFloat(&fbdo, "/weather/temperature", temperatureDHT)) {
-        Serial.println("✅ Temperature sent to Firebase!");
-      } else {
-        Serial.print("❌ Firebase error: ");
-        Serial.println(fbdo.errorReason());
+      // LED1
+      if (Firebase.RTDB.getBool(&fbdo, "/devices/led")) {
+        bool ledStatus = fbdo.boolData();
+        digitalWrite(LED1, ledStatus ? HIGH : LOW);
+        Serial.printf("💡 LED: %s\n", ledStatus ? "ON" : "OFF");
       }
+
+      // FAN
+      if (Firebase.RTDB.getBool(&fbdo, "/devices/fan")) {
+        bool fanStatus = fbdo.boolData();
+        digitalWrite(FAN, fanStatus ? HIGH : LOW);
+        Serial.printf("🌀 FAN: %s\n", fanStatus ? "ON" : "OFF");
+      }
+
+      // LED2 / AC
+      if (Firebase.RTDB.getBool(&fbdo, "/devices/ac")) {
+        bool acStatus = fbdo.boolData();
+        digitalWrite(LED2, acStatus ? HIGH : LOW);
+        Serial.printf("❄️ AC: %s\n", acStatus ? "ON" : "OFF");
+      }
+
+      Serial.println("-----------------------------");
     }
   }
-
-
-  Serial.println("==============================\n");
-  delay(5000);
-}
-
-      // Path: /weather/วันที่/เวลา
-      String path = "/weather/" + String(dateStr) + "/" + timeStr;
-
-      if (Firebase.RTDB.setString(&fbdo, path.c_str(), Temptxt)) {
-        Serial.println("✅ Saved to Firebase");
-      } else {
-        Serial.printf("❌ Firebase error: %s\n", fbdo.errorReason().c_str());
-      }
-    }
-  } else {
-    Serial.println("❌ Failed to read DHT22");
-  }
-
-  delay(10000); // ส่งทุก 10 วิ
 }
