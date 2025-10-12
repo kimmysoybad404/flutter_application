@@ -10,38 +10,57 @@ class Assignment71 extends StatefulWidget {
 class _Assignment71State extends State<Assignment71> {
   String _fromdate = '';
   String _todate = '';
+  DateTime mindate = DateTime.now();
+  Future<String> getTodayDate() async {
+    DateTime now = DateTime.now();
+    String date = '${now.day}/${now.month}/${now.year}';
+    return date;
+  }
 
-  Future<DateTime?> datetime() async {
+  void selectFromDate() async {
     DateTime? dt = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(DateTime.now().year, 1, 1),
       lastDate: DateTime(DateTime.now().year, 12, 31),
     );
-    return dt;
-  }
 
-  void today() {
-    DateTime dt = datetime() as DateTime;
-    setState(() {
-      _todate = '${dt.day}/${dt.month}/${dt.year}';
-      // _date = dt.toString();
-    });
-  }
-
-  void selectFromDate() async {
-    DateTime dt = datetime() as DateTime;
-    setState(() {
-      _fromdate = '${dt.day}/${dt.month}/${dt.year}';
-      // _date = dt.toString();
-    });
+    if (dt != null) {
+      setState(() {
+        _fromdate = '${dt.day}/${dt.month}/${dt.year}';
+        _todate = '${dt.day}/${dt.month}/${dt.year}';
+        mindate = dt;
+      });
+    }
   }
 
   void selectToDate() async {
-    DateTime dt = datetime() as DateTime;
+    DateTime? dt = await showDatePicker(
+      context: context,
+      initialDate: mindate,
+      firstDate: mindate,
+      lastDate: DateTime(DateTime.now().year, 12, 31),
+    );
+
+    if (dt != null) {
+      setState(() {
+        _todate = '${dt.day}/${dt.month}/${dt.year}';
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeDates();
+  }
+
+  void _initializeDates() async {
+    String today = await getTodayDate();
+
     setState(() {
-      _todate = '${dt.day}/${dt.month}/${dt.year}';
-      // _date = dt.toString();
+      _fromdate = today;
+      _todate = today;
     });
   }
 
