@@ -74,6 +74,8 @@ flutter:
     - aessets/images/lll.png
     - aessets/images/ooo.png
     - aessets/images/sss.png
+    - aessets/images/Dino.png
+    - aessets/images/Diamond.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
