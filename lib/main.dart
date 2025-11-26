@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/loginandre/login.dart';
 import 'package:flutter_application/week07/page/Ass2.dart';
 import 'package:flutter_application/week07/page/Ass3.dart';
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Ass3(),
+      home: Login(),
       debugShowCheckedModeBanner: false,
     );
   }
