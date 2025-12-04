@@ -7,6 +7,7 @@ import 'package:flutter_application/SmartHomeNaja/Page/SettingPage/Lang.dart';
 import 'package:flutter_application/SmartHomeNaja/Page/SettingPage/Privacy_Policy.dart';
 import 'package:flutter_application/SmartHomeNaja/Page/SettingPage/Terms_of_Service.dart';
 import 'package:flutter_application/SmartHomeNaja/Page/SettingPage/wifi.dart';
+import 'package:flutter_application/User/Login.dart';
 
 class Settingpage extends StatefulWidget {
   const Settingpage({super.key});
@@ -330,10 +331,15 @@ class _SettingpageState extends State<Settingpage> {
               ),
             ),
             onPressed: () {
-              Navigator.pop(context);
-              _toast(context, 'Logged out successfully');
+              Navigator.pop(context); 
+
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const Login()),
+                (route) => false,
+              );
             },
-            child: const Text('Logout'),
+            child: const Text('Logout',style: TextStyle(color: Colors.white),),
           ),
         ],
       ),
