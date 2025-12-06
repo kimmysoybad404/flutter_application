@@ -58,7 +58,7 @@ AppBar statisticsAppBar(BuildContext context) {
         ),
         const SizedBox(width: 12),
         const Text(
-          'Statistics',
+          'Dashboard',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -156,10 +156,6 @@ class VoiceCommandAppBar extends StatelessWidget
       elevation: 0,
       backgroundColor: Colors.blueAccent,
       centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

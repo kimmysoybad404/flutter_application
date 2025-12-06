@@ -268,7 +268,7 @@ class _HomepageState extends State<Homepage> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Text(
-                        temperature,
+                        "21 °C",
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
